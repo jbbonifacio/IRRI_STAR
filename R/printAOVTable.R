@@ -7,9 +7,9 @@
 # -------------------------------------------------------------------------------
 
 
-printAOVTable <- function(aovtable) UseMethod("printAOVTable")
+printAOVTable <- function(aovtable){ #UseMethod("printAOVTable")
 
-printAOVTable.default <- function(aovtable) {
+# printAOVTable.default <- function(aovtable) {
 
      tempaov <- aovtable
      tempaov[,1] <- format(tempaov[,1], scientific = FALSE, digits = 1)

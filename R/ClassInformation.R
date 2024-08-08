@@ -7,9 +7,9 @@
 # Note: Include multiple response variable
 # -------------------------------------------------------------------------------
 
-ClassInformation <- function(data, respvar = NULL) UseMethod("ClassInformation")
+ClassInformation <- function(data, respvar = NULL){ #UseMethod("ClassInformation")
 
-ClassInformation.default <- function(data, respvar = NULL) {
+# ClassInformation.default <- function(data, respvar = NULL) {
 	result <- DataAttribute(data)
 	result <- result[result[,"TYPE"] == "factor",c(1,3,4)]
 	result[,2] <- as.numeric(result[,2])

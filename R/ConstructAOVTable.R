@@ -11,9 +11,9 @@
 # aovTable is a class "summary.aov" and "listof"
 # -------------------------------------------------------------------------------
 
-ConstructAOVTable <- function(aovTable, computeTotal = TRUE) UseMethod("ConstructAOVTable")
+ConstructAOVTable <- function(aovTable, computeTotal = TRUE){ #UseMethod("ConstructAOVTable")
 
-ConstructAOVTable.default <- function(aovTable, computeTotal = TRUE) {
+# ConstructAOVTable.default <- function(aovTable, computeTotal = TRUE) {
 	temp <- aovTable
 	rownames(temp)[nrow(temp)] <- "Error"
 	if (computeTotal) {

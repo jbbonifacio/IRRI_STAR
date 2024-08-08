@@ -15,9 +15,9 @@
 # -----------------------------------------------------------------------------------
 
 
-printDataFrame <- function(dataFrame, border = TRUE, digits = NULL) UseMethod("printDataFrame")
+printDataFrame <- function(dataFrame, border = TRUE, digits = NULL){ #UseMethod("printDataFrame")
 
-printDataFrame.default <- function(dataFrame, border = TRUE, digits = NULL) {
+# printDataFrame.default <- function(dataFrame, border = TRUE, digits = NULL) {
 
 	if (!is.data.frame(dataFrame)) { stop("The argument 'dataFrame' should be of class data.frame.") }
 	dataChar <- DataAttribute(dataFrame)[,1:2]

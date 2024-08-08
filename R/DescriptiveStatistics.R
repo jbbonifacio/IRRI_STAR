@@ -6,9 +6,9 @@
 # Note: Modified and combined version of the old DescriptiveStatistics and summaryStat
 # ----------------------------------------------------------------------------------------
 
-DescriptiveStatistics <- function(data, var, grp = NULL, statistics = c("nnmiss", "mean", "sd")) UseMethod("DescriptiveStatistics")
+DescriptiveStatistics <- function(data, var, grp = NULL, statistics = c("nnmiss", "mean", "sd")){ #UseMethod("DescriptiveStatistics")
 
-DescriptiveStatistics.default <- function(data, var, grp = NULL, statistics = c("nnmiss", "mean", "sd")) {
+# DescriptiveStatistics.default <- function(data, var, grp = NULL, statistics = c("nnmiss", "mean", "sd")) {
 	if (is.character(data)) {
 		nameData <- data
 		if (!exists(nameData)) { stop(paste("The object '", nameData,"' does not exists.", sep = "")) }

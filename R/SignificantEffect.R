@@ -6,9 +6,9 @@
 # Modified by: Alaine A. Gulles 07.19.2013
 # -------------------------------------------------------------------------------
 
-SignificantEffect <- function(aovTable, alpha = 0.05) UseMethod("SignificantEffect")
+SignificantEffect <- function(aovTable, alpha = 0.05){ #UseMethod("SignificantEffect")
 
-SignificantEffect.default <- function(aovTable, alpha = 0.05) {
+# SignificantEffect.default <- function(aovTable, alpha = 0.05) {
      rownames(aovTable) <- trimws(rownames(aovTable))  # remove spaces of sv in anova table
      tableSigEffect <- aovTable[!is.na(aovTable[,5]),]
      tempEffect <- NULL
