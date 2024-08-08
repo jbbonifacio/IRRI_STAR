@@ -1,6 +1,6 @@
 exportPattern("^[[:alpha:]]+")
 import(cluster)
-import(DiGGer)
+import(ExpDes.pt)
 import(ade4)
 import(leaps)
 import(vegan)
