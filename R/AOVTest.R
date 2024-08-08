@@ -6,24 +6,24 @@
 # Modified by: Alaine A. Gulles 07.19.2013
 # Note: Include remarks when data is unbalanced, when no balanced data can be generated
 # -------------------------------------------------------------------------------
-data = read.csv("C:/Users/JBonifacio.CGIARAD/Downloads/SeedingRate.csv")
-design = "RCBD"
-respvar = "GrainYield"
-factor1 = "SeedingRate"
-factor2 = NULL
-factor3 = NULL
-factor4 = NULL
-rep1 = "Rep"
-rep2 = NULL
-set = NULL
-descriptive = FALSE
-normality = FALSE
-homogeneity = FALSE
-pwTest = NULL
-pwVar = NULL
-contrastOption = NULL
-sig = 0.05
-outputPath = NULL
+# data = read.csv("C:/Users/JBonifacio.CGIARAD/Downloads/SeedingRate.csv")
+# design = "RCBD"
+# respvar = "GrainYield"
+# factor1 = "SeedingRate"
+# factor2 = NULL
+# factor3 = NULL
+# factor4 = NULL
+# rep1 = "Rep"
+# rep2 = NULL
+# set = NULL
+# descriptive = FALSE
+# normality = FALSE
+# homogeneity = FALSE
+# pwTest = NULL
+# pwVar = NULL
+# contrastOption = NULL
+# sig = 0.05
+# outputPath = NULL
 
 
 AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NULL, factor4 = NULL, rep1 = NULL, rep2 = NULL, set = NULL, descriptive = FALSE, normality = FALSE, homogeneity = FALSE, pwTest = NULL, pwVar = NULL, contrastOption = NULL, sig = 0.05, outputPath = NULL) { #UseMethod("AOVTest")
@@ -410,7 +410,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                }
 
                # --- DETERMINE THE EFFECTS WHICH ARE SIGNIFICANT --- #
-               sigEffect <- SignificantEffect(tempAOVTable, alpha = sig)
+               sigEffect <- STAR::SignificantEffect(tempAOVTable, alpha = sig)
                if (!is.null(sigEffect)) {
                     sigEffect <- trimws(sigEffect)
                     deletedEffect <- FALSE
