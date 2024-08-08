@@ -2,34 +2,34 @@
 # RCropStat Beta Version: Function
 # DescriptiveStatistics(data, var, grp = NULL, statToCompute)
 # Created by: Alaine A. Gulles 10.01.2010 for International Rice Research Institute
-# Modified by: Alaine A. Gulles 05.04.2012 
+# Modified by: Alaine A. Gulles 05.04.2012
 # Note: Modified and combined version of the old DescriptiveStatistics and summaryStat
 # ----------------------------------------------------------------------------------------
 
 DescriptiveStatistics <- function(data, var, grp = NULL, statistics = c("nnmiss", "mean", "sd")) UseMethod("DescriptiveStatistics")
 
 DescriptiveStatistics.default <- function(data, var, grp = NULL, statistics = c("nnmiss", "mean", "sd")) {
-	if (is.character(data)) { 
+	if (is.character(data)) {
 		nameData <- data
 		if (!exists(nameData)) { stop(paste("The object '", nameData,"' does not exists.", sep = "")) }
 		tempData <- eval(parse(text = data))
 	} else {
 		if (is.data.frame(data)) {
-			nameData <- paste(deparse(substitute(data)))	
+			nameData <- paste(deparse(substitute(data)))
 			tempData <- data
 		} else { stop ("The argument should either be a data frame or a character string indicating the name of the data frame.") }
 	}
 	if (!is.data.frame(tempData)) { stop("The object should be of type data frame.") }
 	if (!is.character(var)) 	{ stop(paste("The object 'var' should be a character vector.", sep = "")) }
 	if (any(is.na(match(var, names(tempData))))) { stop("At least one item in the character vector 'var' does not match any variable name in the dataset.") }
-	if (!is.null(grp)) 		{ 
+	if (!is.null(grp)) 		{
 		if (any(is.na(match(grp, names(tempData))))) { stop("At least one item in the character vector 'var' does not match any variable name in the dataset.") }
 		tempGrp <- tempData[grp]
 		for (i in (1:ncol(tempGrp))) { tempGrp[,i] <- factor(tempGrp[,i]) }
 	} else { tempGrp <- rep(1, each = nrow(tempData)) }
 	tempVar <- tempData[var]
-	
-	availableStatistics <- c("n", "nnmiss", "nmiss", "sum", "css", "ucss", "se.skew", "se.kurtosis", "range", "iqr", "var", "sd", "se.mean", 
+
+	availableStatistics <- c("n", "nnmiss", "nmiss", "sum", "css", "ucss", "se.skew", "se.kurtosis", "range", "iqr", "var", "sd", "se.mean",
 		  "cv", "mean", "median", "mode", "min", "max", "q1", "q3", "skew", "kurtosis")
 	if (is.null(statistics)) { statToCompute <- c("nnmiss", "mean", "sd") } else { statToCompute <- statistics }
 	if (all(is.na(match(statToCompute, availableStatistics)))) { stop("All numerical descriptive measures enumerated is invalid. Expect one of the following: 'n', 'nnmiss', 'nmiss', 'sum', 'css', 'ucss', 'se.skew', 'se.kurtosis', 'range', 'iqr', 'var', 'sd', 'se.mean', 'cv', 'mean', 'median', 'mode', 'min', 'max', 'q1', 'q3', 'skew' or 'kurtosis'") }
@@ -37,9 +37,9 @@ DescriptiveStatistics.default <- function(data, var, grp = NULL, statistics = c(
 
 	summaryTable <- NULL
 	outputLabel <- NULL
-	
+
 	# --- compute for number of rows in the data set
-	if(!is.na(match("n", statToCompute))) { 
+	if(!is.na(match("n", statToCompute))) {
 		a <- NULL
 		for (i in (1:ncol(tempVar))) { a <- rbind(a, as.data.frame.table(tapply(tempVar[[i]], tempGrp, length))) }
 		if (any(is.na(a$Freq))) { a$Freq <- replace(a$Freq, attr(na.omit(a$Freq), "na.action"), 0) }
@@ -76,7 +76,7 @@ DescriptiveStatistics.default <- function(data, var, grp = NULL, statistics = c(
 		colnames(summaryTable)[ncol(summaryTable)] <- "N_MissObs"
 		outputLabel <- c(outputLabel, "No. of Missing Obs.")
 	}
-	
+
 	# --- compute the minimun observation
 	if(!is.na(match("min", statToCompute))) {
 		a <- NULL
@@ -97,7 +97,7 @@ DescriptiveStatistics.default <- function(data, var, grp = NULL, statistics = c(
 
 	# --- compute the sum of the variable
 	if(!is.na(match("sum", statToCompute))) {
-		a <- NULL		
+		a <- NULL
 		for (i in (1:ncol(tempVar))) a <- rbind(a, as.data.frame.table(tapply(tempVar[[i]], tempGrp, sum, na.rm = TRUE)))
 		ifelse(is.null(summaryTable), summaryTable <- a, summaryTable <- cbind(summaryTable, a[ncol(a)]))
 		colnames(summaryTable)[ncol(summaryTable)] <- "Sum"
@@ -227,7 +227,7 @@ DescriptiveStatistics.default <- function(data, var, grp = NULL, statistics = c(
 		colnames(summaryTable)[ncol(summaryTable)] <- "SE_Kurtosis"
 		outputLabel <- c(outputLabel,"Std. Error of Kurtosis")
 	}
-	
+
 	if (is.null(ncol(tempGrp))) { summaryTable[,1] <- names(tempVar)
 	} else {
 		variable <- c(rep(names(tempVar), each = nrow(as.data.frame.table(table(tempGrp)))))

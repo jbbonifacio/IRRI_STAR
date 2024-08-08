@@ -9,12 +9,12 @@
 DataAttribute <- function(data) UseMethod("DataAttribute")
 
 DataAttribute.default <- function(data) {
-	if(is.character(data)) { 
+	if(is.character(data)) {
 		nameData <- data
 		if (!exists(nameData)) { stop(paste("The object '", nameData,"' does not exists.", sep = "")) }
 		tempData <- eval(parse(text = data))
-	} else { 
-		nameData <- paste(deparse(substitute(data)))	
+	} else {
+		nameData <- paste(deparse(substitute(data)))
 		#if (!exists(nameData)) { stop(paste("The object '", nameData,"' does not exists.", sep = "")) }
 		tempData <- data
 	}

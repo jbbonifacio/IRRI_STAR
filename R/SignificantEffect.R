@@ -9,7 +9,7 @@
 SignificantEffect <- function(aovTable, alpha = 0.05) UseMethod("SignificantEffect")
 
 SignificantEffect.default <- function(aovTable, alpha = 0.05) {
-     rownames(aovTable) <- trimStrings(rownames(aovTable))  # remove spaces of sv in anova table
+     rownames(aovTable) <- trimws(rownames(aovTable))  # remove spaces of sv in anova table
      tableSigEffect <- aovTable[!is.na(aovTable[,5]),]
      tempEffect <- NULL
      if (all(tableSigEffect[,5] > alpha)) { sigEffect <- NULL
@@ -19,18 +19,18 @@ SignificantEffect.default <- function(aovTable, alpha = 0.05) {
           allFactor <- strsplit(hEffect, split = ":")[[1]]
           tableSigEffect <- tableSigEffect[tableSigEffect[,5] <= alpha,]
           numOfEffect <- 0; Freq <- 0
-          if (!is.na(match(hEffect, rownames(tableSigEffect)))) { sigEffect <- hEffect 
+          if (!is.na(match(hEffect, rownames(tableSigEffect)))) { sigEffect <- hEffect
           } else {
-               if (length(allFactor) > 1) { 
+               if (length(allFactor) > 1) {
                     tableSigEffect <- cbind(tableSigEffect, numOfEffect = unlist(lapply(strsplit(rownames(tableSigEffect),split = ":"),"length")))
                     numFactorCheck <- max(tableSigEffect[,"numOfEffect"])
-                    if (numFactorCheck > 1) { checkOtherEffect <- TRUE 
-                    } else { 
-                         checkOtherEffect <- FALSE 
+                    if (numFactorCheck > 1) { checkOtherEffect <- TRUE
+                    } else {
+                         checkOtherEffect <- FALSE
                          #tableSigEffect <- tableSigEffect[-I(match(trimStrings(rownames(tableSigEffect))[-I(match(trimStrings(allFactor), trimStrings(rownames(tableSigEffect))))], trimStrings(rownames(tableSigEffect)))),]
                     }
                     # determine intial significant effect
-                    sigEffect <- c(sigEffect, trimStrings(rownames(subset(tableSigEffect, numOfEffect == numFactorCheck))))
+                    sigEffect <- c(sigEffect, trimws(rownames(subset(tableSigEffect, numOfEffect == numFactorCheck))))
                     tempEffect <- strsplit(paste(sigEffect, collapse = ":", sep = ""), split = ":")[[1]]
                     tempEffect <- data.frame(Freq = tapply(tempEffect, tempEffect, length))
                     while (checkOtherEffect) {
@@ -44,7 +44,7 @@ SignificantEffect.default <- function(aovTable, alpha = 0.05) {
                          }
                          if (length(tempFactor) > 1) {
                               numFactorCheck <- numFactorCheck - 1
-                              if (numFactorCheck <= 1) { checkOtherEffect <- FALSE 
+                              if (numFactorCheck <= 1) { checkOtherEffect <- FALSE
                               } else {
                                    if (length(tempFactor) < numFactorCheck) numFactorCheck <- length(tempFactor)
                                    for (i in (1:ncol(combn(tempFactor,numFactorCheck)))) {
@@ -52,12 +52,12 @@ SignificantEffect.default <- function(aovTable, alpha = 0.05) {
                                    }
                               }
                          } else { factorToCheck <- tempFactor; checkOtherEffect <- FALSE }
-                         
+
                          if (!is.null(factorToCheck)) {
                               newSigFactor <- FALSE
                               for (i in (1:length(factorToCheck))) {
-                                   if (nrow(subset(tableSigEffect, trimStrings(rownames(tableSigEffect)) == factorToCheck[i])) != 0) {
-                                        sigEffect <- c(sigEffect,trimStrings(rownames(subset(tableSigEffect, trimStrings(rownames(tableSigEffect)) == factorToCheck[i]))))
+                                   if (nrow(subset(tableSigEffect, trimws(rownames(tableSigEffect)) == factorToCheck[i])) != 0) {
+                                        sigEffect <- c(sigEffect,trimws(rownames(subset(tableSigEffect, trimws(rownames(tableSigEffect)) == factorToCheck[i]))))
                                         newSigFactor <- TRUE
                                    }
                               }

@@ -4,14 +4,14 @@
 # ----------------------------
 
 `HSD.test` <- function (y, trt, DFerror, MSerror, alpha=0.05, group=TRUE,main = NULL, pwOrder = c("trmt", "means")){
-	
+
 	pwOrder <- match.arg(pwOrder)	# added by AAGulles
     	name.y <- paste(deparse(substitute(y)))
     	# name.t <- paste(deparse(substitute(trt)))
-	if (is.data.frame(trt)) { 
-		name.t <- names(trt) 
-	} else { 
-		name.t <- paste(deparse(substitute(trt))) 
+	if (is.data.frame(trt)) {
+		name.t <- names(trt)
+	} else {
+		name.t <- paste(deparse(substitute(trt)))
 		index <- which(strsplit(noquote(name.t), split = "")[[1]] == "\"")
 		if (length(index) == 2) {
 			name.t <- substr(noquote(name.t), start = index[1], stop = index[2])
@@ -33,9 +33,9 @@
 
 	if (group && length(unique(trt)) > 26 ) { group <- FALSE }
     	junto <- subset(data.frame(y, trt), is.na(y) == FALSE)
-    	means <- tapply.stat(junto[,1],junto[,2],stat="mean") # change
-    	sds <-   tapply.stat(junto[,1],junto[,2],stat="sd") #change
-   	nn <-   tapply.stat(junto[,1],junto[,2],stat="length") # change
+    	means <- ExpDes.pt::tapply.stat(junto[,1],junto[,2],stat="mean") # change
+    	sds <-   ExpDes.pt::tapply.stat(junto[,1],junto[,2],stat="sd") #change
+   	nn <-   ExpDes.pt::tapply.stat(junto[,1],junto[,2],stat="length") # change
     	means<-data.frame(means,std.err=sds[,2]/sqrt(nn[,2]),replication=nn[,2])
     	names(means)[1:2]<-c(name.t,name.y)
 	# row.names(means)<-means[,1]
@@ -46,7 +46,7 @@
 	# added by AAGulles
 	if (!is.null(main)) { cat("\n", main,"\n", sep = "") }
     	cat("\nTukeys's Honest Significant Difference (HSD) Test\n\n", sep = "") # added by AAGulles
-    	
+
 	# suppress for printing by AAGulles
     	# cat("\nStudy:", main)
     	# cat("\n\nHSD Test for",name.y,"\n")
@@ -60,15 +60,15 @@
 	# suppress for printing by AAGulles
 	labelWidth <- 29
 	maxWidth <- max(nchar(round(MSerror)), nchar(DFerror), nchar(round(Tprob,0)), nchar(round(HSD,0)), nchar(round(nr,0))) + 7
-    	cat(formatC("Alpha", format = "s", width = labelWidth, flag = "-"), formatC(alpha, format = "f", digits = 2, width =  maxWidth, flag = "#"), "\n",sep = "")  
-    	cat(formatC("Error Degrees of Freedom", format = "s", width = labelWidth, flag = "-"), formatC(DFerror, format = "d", width =  maxWidth, flag = "#"), "\n",sep = "")  	
-    	cat(formatC("Error Mean Square", format = "s", width = labelWidth, flag = "-"), formatC(MSerror, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
-    	cat(formatC("Critical Value", format = "s", width = labelWidth, flag = "-"), formatC(Tprob, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
-    	cat(formatC("Test Statistics", format = "s", width = labelWidth, flag = "-"), formatC(HSD, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
-	
+    	cat(formatC("Alpha", format = "s", width = labelWidth, flag = "-"), formatC(alpha, format = "f", digits = 2, width =  maxWidth, flag = "#"), "\n",sep = "")
+    	cat(formatC("Error Degrees of Freedom", format = "s", width = labelWidth, flag = "-"), formatC(DFerror, format = "d", width =  maxWidth, flag = "#"), "\n",sep = "")
+    	cat(formatC("Error Mean Square", format = "s", width = labelWidth, flag = "-"), formatC(MSerror, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")
+    	cat(formatC("Critical Value", format = "s", width = labelWidth, flag = "-"), formatC(Tprob, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")
+    	cat(formatC("Test Statistics", format = "s", width = labelWidth, flag = "-"), formatC(HSD, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")
+
 	if (length(unique(nn[,2]))!=1) {
-		cat(formatC("Harmonic Mean of Cell Sizes", format = "s", width = labelWidth, flag = "-"), formatC(nr, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
-	} 
+		cat(formatC("Harmonic Mean of Cell Sizes", format = "s", width = labelWidth, flag = "-"), formatC(nr, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")
+	}
 	cat("\n")
 
 	if (group) {
@@ -82,7 +82,7 @@
 	 	# AAGulles added the following if-else stmt:
 	  	if (pwOrder == "means") { w<-order(means[,2],decreasing = TRUE) ## original LSD.test
 	  	} else {
-               if (suppressWarnings(all(!is.na(as.numeric(as.character(factor(trimStrings(output[,1])))))))) {
+               if (suppressWarnings(all(!is.na(as.numeric(as.character(factor(trimws(output[,1])))))))) {
                     output[,1] <- factor(as.numeric(as.character(output[,1])))
 	  	     }
 			output <- output[order(output[,1]),]
@@ -119,17 +119,17 @@
 			# else  if (pvalue[k] <= 0.1) sig[k]<-"."
 
 			# added by AAGulles
-			remark <- "  "					
-			if (alpha <= 0.001)  { remark <-"***"	
+			remark <- "  "
+			if (alpha <= 0.001)  { remark <-"***"
         		} else {
-				if (alpha <= 0.01) { remark <-"**"	
+				if (alpha <= 0.01) { remark <-"**"
 				} else {
-					if (alpha <= 0.05) { remark<-"*"	
+					if (alpha <= 0.05) { remark<-"*"
 					} else {
-						if (alpha <= 0.1) remark <-"."	
+						if (alpha <= 0.1) remark <-"."
 					}
 				}
-			}  
+			}
 			if (pvalue[k] <= alpha) { sig[k] <- remark } else { sig[k] <- "   " }
 		}
 		tr.i <- means[comb[1, ],1]

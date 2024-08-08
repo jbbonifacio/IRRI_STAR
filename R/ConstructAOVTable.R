@@ -1,5 +1,5 @@
 # -------------------------------------------------------------------------------
-# R-CropStat Beta Version: 
+# R-CropStat Beta Version:
 # -------------------------------------------------------------------------------
 # ConstructAOVTable: Functions for contructing the ANOVA table
 # Created by: Alaine A. Gulles 05.18.2012 for International Rice Research Institute
@@ -7,7 +7,7 @@
 # -------------------------------------------------------------------------------
 # Argument:
 # aovTable is a class anova
-# aovTable is a class "summary.aovlist" 
+# aovTable is a class "summary.aovlist"
 # aovTable is a class "summary.aov" and "listof"
 # -------------------------------------------------------------------------------
 
@@ -18,7 +18,7 @@ ConstructAOVTable.default <- function(aovTable, computeTotal = TRUE) {
 	rownames(temp)[nrow(temp)] <- "Error"
 	if (computeTotal) {
 		temp[nrow(temp)+1, 1:2] <- c(sum(temp[,1]), sum(temp[,2]))
-		rownames(temp)[nrow(temp)] <- "Total"	
+		rownames(temp)[nrow(temp)] <- "Total"
 	}
 	return(temp)
 
@@ -29,13 +29,13 @@ ConstructAOVTable.summary.aov <- function(aovTable, computeTotal = TRUE) {
 	rownames(temp)[nrow(temp)] <- "Error"
 	if (computeTotal) {
 		temp[nrow(temp)+1, 1:2] <- c(sum(temp[,1]), sum(temp[,2]))
-		rownames(temp)[nrow(temp)] <- "Total"	
+		rownames(temp)[nrow(temp)] <- "Total"
 	}
 	return(temp)
 }
 
 ConstructAOVTable.summary.aovlist <- function(aovTable, computeTotal = TRUE) {
-	
+
 	temp <- NULL
 	for (i in (1:length(aovTable))) {
 		temp <- rbind(temp, aovTable[[i]][[1]])
@@ -44,7 +44,7 @@ ConstructAOVTable.summary.aovlist <- function(aovTable, computeTotal = TRUE) {
 
 	if (computeTotal) {
 		temp[nrow(temp)+1, 1:2] <- c(sum(temp[,1]), sum(temp[,2]))
-		rownames(temp)[nrow(temp)] <- "Total"	
+		rownames(temp)[nrow(temp)] <- "Total"
 	}
 	return(temp)
 } ### end stmt --- contructAOVTable function
