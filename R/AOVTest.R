@@ -82,9 +82,9 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
      for (i in (1:length(allFactor))) {
           if (is.numeric(data[,allFactor[i]])) { data[,allFactor[i]] <- factor(data[,allFactor[i]])
           } else {
-               if (suppressWarnings(all(!is.na(as.numeric(as.character(factor(trimStrings(data[,allFactor[i]])))))))) {
+               if (suppressWarnings(all(!is.na(as.numeric(as.character(factor(trimws(data[,allFactor[i]])))))))) {
                     data[,allFactor[i]] <- factor(as.numeric(data[,allFactor[i]]))
-               } else { data[,allFactor[i]] <- factor(trimStrings(data[,allFactor[i]])) }
+               } else { data[,allFactor[i]] <- factor(trimws(data[,allFactor[i]])) }
           }
      }
 
@@ -161,7 +161,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                                    cat("ERROR: Cannot perform ANOVA for balanced data for response variable '", respvar[i], "'. Too many missing values.\n\n", sep = "")
                                    next
                               }
-                              tempData <- estMissData(design, data = newData, respvar[i], factor1, factor2, factor3, factor4, rep1, rep2)
+                              tempData <- STAR::estMissData(design, data = newData, respvar[i], factor1, factor2, factor3, factor4, rep1, rep2)
                               estimateData <- TRUE
                               estimateAllData <- TRUE
                          } else { estimateData <- FALSE }
@@ -173,12 +173,12 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                                    cat("ERROR: Cannot perform ANOVA for balanced data. The data set for response variable '", respvar[i],"' is unbalanced.\n\n", sep = "")
                                    next
                               }
-                              newData <- GenerateBalanceData(tempData, respvar[i], allFactor, c(rep1, rep2) , design)
+                              newData <- STAR::GenerateBalanceData(tempData, respvar[i], allFactor, c(rep1, rep2) , design)
                               if ((1 - (length(na.omit(newData[,respvar[i]]))/nrow(newData))) > 0.10) {
                                    cat("ERROR: Cannot perform ANOVA for balanced data for response variable '", respvar[i], "'. Too many missing values.\n\n", sep = "")
                                    next
                               }
-                              tempData <- estMissData(design, data = newData, respvar[i], factor1, factor2, factor3, factor4, rep1, rep2)
+                              tempData <- STAR::estMissData(design, data = newData, respvar[i], factor1, factor2, factor3, factor4, rep1, rep2)
                               estimateData <- TRUE
                               estimateAllData <- TRUE
                          } else { estimateData <- FALSE }
@@ -216,8 +216,8 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                if (estimateData) { tempresult <- summary(suppressWarnings(aov(formula(mymodel), data = origData)))     }
                resultTry <- try(result <- suppressWarnings(aov(formula(mymodel), tempData)), silent = TRUE)
                if(all(class(resultTry) == "try-error")) {
-                    msg <- trimStrings(strsplit(resultTry, ":")[[1]])
-                    msg <- trimStrings(paste(strsplit(msg, "\n")[[length(msg)]], collapse = " "))
+                    msg <- trimws(strsplit(resultTry, ":")[[1]])
+                    msg <- trimws(paste(strsplit(msg, "\n")[[length(msg)]], collapse = " "))
                     cat("Error: ", msg, "\n\n", sep = "")
                     next
                }
@@ -243,16 +243,16 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                          tempAnova[[i]][[z]][[1]][1:numEffects, "Pr(>F)"] <- pf(tempAnova[[i]][[z]][[1]][1:numEffects,"F value"], tempAnova[[i]][[z]][[1]][1:numEffects,"Df"], dfError, lower.tail = FALSE)
                     }
                } else { tempAnova[[i]][[z]] <- summary(result) }
-               tempAOVTable <- ConstructAOVTable(tempAnova[[i]][[z]][[1]])
+               tempAOVTable <- STAR::ConstructAOVTable(tempAnova[[i]][[z]][[1]])
 
                # -- PRINTING CLASS LEVEL INFORMATION -- #
                #ClassInformation(tempData[, c(factor1, factor2, factor3, factor4, rep1, rep2, respvar[i])], respvar = respvar[i])
-               ClassInformation(origData[, c(factor1, factor2, factor3, factor4, rep1, rep2, respvar[i])], respvar = respvar[i])
+               STAR::ClassInformation(origData[, c(factor1, factor2, factor3, factor4, rep1, rep2, respvar[i])], respvar = respvar[i])
                cat("\n\n")
 
                # --- PRINTING DESCRIPTIVE STATISTICS --- #
                if (descriptive) {
-                    DescriptiveStatistics(data = tempData, var = respvar[i], grp = NULL, statistics = c("n", "mean", "sd", "min", "max"))
+                 STAR::DescriptiveStatistics(data = tempData, var = respvar[i], grp = NULL, statistics = c("n", "mean", "sd", "min", "max"))
                     if (estimateData) { cat("REMARK: Raw data and estimates of the missing values are used.\n") }
                     cat("\n")
                }
@@ -342,11 +342,11 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                # --- PRINTING OF ANOVA TABLE --- #
                if (is.null(contrastOption)) {
                     cat("ANOVA TABLE\nResponse Variable: ", respvar[i], "\n", sep = "")
-                    printAOVTable(tempAOVTable)
+                 STAR::printAOVTable(tempAOVTable)
                     if (estimateData) { cat("REMARK: Raw data and estimates of the missing values are used.\n") }
                     cat("\n")
                } else {
-                    ContrastCompute(data = tempData, aovTable = tempAnova[[i]][[z]], mymodel, mymodel2,contrast.option = contrastOption)
+                 STAR::ContrastCompute(data = tempData, aovTable = tempAnova[[i]][[z]], mymodel, mymodel2,contrast.option = contrastOption)
                     if (estimateData) { cat("REMARK: Raw data and estimates of the missing values are used.\n") }
                     cat("\n")
                }
@@ -374,7 +374,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                }
                colnames(summaryStat)[ncol(summaryStat)] <- paste(respvar[i], "Mean")
                cat("Summary Statistics\n")
-               printDataFrame(as.data.frame(summaryStat))
+               STAR::printDataFrame(as.data.frame(summaryStat))
                if (estimateData) { cat("REMARK: Raw data and estimates of the missing values are used.\n") }
                cat("\n")
 
@@ -384,7 +384,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                               stdErrTable <- data.frame(Effects = names(unlist(summaryTable$se)),StdErr = unlist(summaryTable$se))
                               rownames(stdErrTable) <- 1:nrow(stdErrTable)
                               cat("Standard Errors\n")
-                              printDataFrame(stdErrTable)
+                              STAR::printDataFrame(stdErrTable)
                               cat("\n")
                          }
                     }
@@ -418,7 +418,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                     if (length(allFactor) == 1) {
                          tableMeans <- as.data.frame.table(summaryTable$tables[[length(summaryTable$tables)]])
                          colnames(tableMeans)[ncol(tableMeans)] <- paste(respvar[i]," Means", sep = "")
-                         printDataFrame(tableMeans)
+                         STAR::printDataFrame(tableMeans)
                          if (estimateData) { cat("REMARK: Raw data and estimates of the missing values are used.\n") }
                     } else {
                          if (designChoice <= 3) {
@@ -456,11 +456,11 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                if (!is.null(sigEffect)) {
                     if (!is.na(match(respvar[i], pwVar))) {
                          for (j in (1:length(sigEffect))) {
-                              pairwiseComparison(tempAnova[[i]][[z]], design, trimws(sigEffect[j]), data = tempData, respvar[i], pwTest, siglevel = sig)
+                           STAR::pairwiseComparison(tempAnova[[i]][[z]], design, trimws(sigEffect[j]), data = tempData, respvar[i], pwTest, siglevel = sig)
                          }
                     } else {
                          for (j in (1:length(sigEffect))) {
-                              pairwiseComparison(tempAnova[[i]][[z]], design, trimws(sigEffect[j]), data = tempData, respvar[i], pwTest = NULL, siglevel = sig)
+                           STAR::pairwiseComparison(tempAnova[[i]][[z]], design, trimws(sigEffect[j]), data = tempData, respvar[i], pwTest = NULL, siglevel = sig)
                          }
                     }
                }
