@@ -278,7 +278,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
 
                # -- CREATE THE RESIDUAL DATA AND PREDICTED VALUES -- #
                residNfittedData <- NULL
-               residNfittedData <- data.frame(PredictedValues(result))
+               residNfittedData <- data.frame(STAR::PredictedValues(result))
                if (inherits(result, what = "aovlist")) { residNfittedData <- data.frame(residNfittedData,proj(result)[[length(result)]][,"Residuals"])
                } else { residNfittedData <- data.frame(residNfittedData, residuals(result)) }
                colnames(residNfittedData) <- c(paste(respvar[i],"pred", sep = "_"), paste(respvar[i],"resid", sep = "_"))

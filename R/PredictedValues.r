@@ -6,9 +6,9 @@
 # -------------------------------------------------------------------------------
 
 
-PredictedValues <- function(object, errorTerm = NULL) UseMethod("PredictedValues")
+PredictedValues <- function(object, errorTerm = NULL){ #UseMethod("PredictedValues")
 
-PredictedValues.default <- function(object, errorTerm = NULL) {
+# PredictedValues.default <- function(object, errorTerm = NULL) {
 	return(fitted(object))
 }
 
