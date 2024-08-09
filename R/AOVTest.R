@@ -16,13 +16,13 @@
 # rep1 = "Rep"
 # rep2 = NULL
 # set = NULL
-# descriptive = FALSE
-# normality = FALSE
-# homogeneity = FALSE
+# descriptive = TRUE
+# normality = TRUE
+# homogeneity = TRUE
 # pwTest = NULL
 # pwVar = NULL
 # contrastOption = NULL
-# sig = 0.05
+# sig = 0.01
 # outputPath = NULL
 
 
@@ -175,7 +175,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                                    cat("ERROR: Cannot perform ANOVA for balanced data. The data set for response variable '", respvar[i],"' is unbalanced.\n\n", sep = "")
                                    next
                               }
-                              newData <- GenerateBalanceData(tempData, respvar[i], allFactor, c(rep1, rep2) , design)
+                              newData <- STAR::GenerateBalanceData(tempData, respvar[i], allFactor, c(rep1, rep2) , design)
                               if ((1 - (length(na.omit(newData[,respvar[i]]))/nrow(newData))) > 0.10) {
                                    cat("ERROR: Cannot perform ANOVA for balanced data for response variable '", respvar[i], "'. Too many missing values.\n\n", sep = "")
                                    next
@@ -310,13 +310,13 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                # -- PERFORM NORMALITY TEST AND/HOMOGENEITY OF VARIANCES -- #
                if (homogeneity || normality) {
                     tempData2 <- tempData[!is.na(tempData[,respvar[i]]),]
-                    assumpData <- data.frame(CombineFactorLevels(data = tempData2, concatVar = allFactor, targetName = "factor")["factor"], residNfittedData[ncol(residNfittedData)])
+                    assumpData <- data.frame(STAR::CombineFactorLevels(data = tempData2, concatVar = allFactor, targetName = "factor")["factor"], residNfittedData[ncol(residNfittedData)])
 
                     # --- PRINTING RESULTS OF TEST FOR HOMOGENEITY OF VARIANCES --- #
                     if (homogeneity) {
-                         capture.output(bartlett.result <- HeteroskedasticityTest(data = assumpData, var = paste(names(assumpData)[2]), grp = "factor", method = c("bartlett")))
+                         capture.output(bartlett.result <- STAR::HeteroskedasticityTest(data = assumpData, var = paste(names(assumpData)[2]), grp = "factor", method = c("bartlett")))
                          cat("Test for Homogeneity of Variances\n")
-                         printDataFrame(bartlett.result[,3:ncol(bartlett.result)])
+                         STAR::printDataFrame(bartlett.result[,3:ncol(bartlett.result)])
                          cat("\n")
                          rm(bartlett.result)
                     }
@@ -324,7 +324,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                     # --- PRINTING RESULT OF SHAPIRO WILK TEST --- #
                     if (normality) {
                          if (nrow(assumpData) >= 3 && nrow(assumpData) <= 5000) {
-                              NormalityTest(data = assumpData, var = paste(names(assumpData)[2]), grp = NULL, method = c("swilk"))
+                           STAR::NormalityTest(data = assumpData, var = paste(names(assumpData)[2]), grp = NULL, method = c("swilk"))
                               cat("\n")
                          }
                     }

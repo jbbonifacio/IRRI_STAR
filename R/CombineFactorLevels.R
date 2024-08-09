@@ -9,13 +9,13 @@
 # targetName = name of the new variable to be created
 # --------------------------------------------------------------------------------------------
 
-CombineFactorLevels <- function(data, concatVar, targetName = NULL) UseMethod("CombineFactorLevels")
+CombineFactorLevels <- function(data, concatVar, targetName = NULL){ #UseMethod("CombineFactorLevels")
 
-CombineFactorLevels.default <- function(data, concatVar, targetName = NULL) {
+# CombineFactorLevels.default <- function(data, concatVar, targetName = NULL) {
 	if (is.character(data)) { data <- eval(parse(text = data)) }
 	if (is.null(targetName)) { tempName <- make.unique(c(names(data), "NewVar"), sep = "")
-	} else { 
-		if (!is.valid.name(targetName)) { targetName <- make.names(c(names(data), "NewVar"), unique = TRUE) }
+	} else {
+		if (!STAR::is.valid.name(targetName)) { targetName <- make.names(c(names(data), "NewVar"), unique = TRUE) }
 		tempName <- make.unique(c(names(data), targetName), sep = "")
 	}
 

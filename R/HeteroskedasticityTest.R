@@ -3,9 +3,9 @@
 # -------------------------------------------------------------------------------------
 # HeteroskedasticityTest: Perform test for homogeneity of variances
 # Created by: Alaine A. Gulles 03.16.2011 for International Rice Research Institute
-# Modified by: Alaine A. Gulles 02.16.2012 
+# Modified by: Alaine A. Gulles 02.16.2012
 # -------------------------------------------------------------------------------------
-# ARGUMENT: var   = numeric data frame or a character vector containing the variable 
+# ARGUMENT: var   = numeric data frame or a character vector containing the variable
 #			  names needed for the analysis
 #           grp = a numeric or character data frame or a character vector containing
 #			the grouping variable names needed for the analysis
@@ -14,16 +14,16 @@
 #			   one of the followng "bartlett" (default) and/or "levene"
 # -------------------------------------------------------------------------------------
 
-HeteroskedasticityTest <- function(data, var, grp, method = c("bartlett")) UseMethod("HeteroskedasticityTest")
+HeteroskedasticityTest <- function(data, var, grp, method = c("bartlett")){ #UseMethod("HeteroskedasticityTest")
 
-HeteroskedasticityTest.default <- function(data, var, grp, method = c("bartlett")) {
-     if (is.character(data)) { 
+# HeteroskedasticityTest.default <- function(data, var, grp, method = c("bartlett")) {
+     if (is.character(data)) {
           nameData <- data
           if (!exists(nameData)) { stop(paste("The object '", nameData,"' does not exists.", sep = "")) }
           tempData <- eval(parse(text = data))
      } else {
           if (is.data.frame(data)) {
-               nameData <- paste(deparse(substitute(data)))	
+               nameData <- paste(deparse(substitute(data)))
                tempData <- data
           } else {
                stop ("The argument should either be a data frame or a character string indicating the name of the data frame.")
@@ -51,21 +51,21 @@ HeteroskedasticityTest.default <- function(data, var, grp, method = c("bartlett"
 				command <- paste(method.command[i], "(tempData[,'", var[j],"'], tempData[,'", grp[k],"'])", sep = "")
 				result <- eval(parse(text = command))
 				if (method[i] == "levene") hovTable <- rbind(hovTable, data.frame(GRP = grp[k], VARIABLE = var[j],
-                                                                                      PROCEDURE = paste(toupper(substring(method[i],1,1)),substring(method[i],2), sep = ""), 
-                                                                                      DF = result[1,1], STATISTIC = "F", VALUE = result[1,2], 
+                                                                                      PROCEDURE = paste(toupper(substring(method[i],1,1)),substring(method[i],2), sep = ""),
+                                                                                      DF = result[1,1], STATISTIC = "F", VALUE = result[1,2],
                                                                                       PROB = colnames(result)[3], PVALUE = result[1,3]))
-				if (method[i] == "bartlett") hovTable <- rbind(hovTable, data.frame(GRP = grp[k], VARIABLE = var[j], 
-                                                                PROCEDURE = paste(toupper(substring(method[i],1,1)),substring(method[i],2), sep = ""), 
+				if (method[i] == "bartlett") hovTable <- rbind(hovTable, data.frame(GRP = grp[k], VARIABLE = var[j],
+                                                                PROCEDURE = paste(toupper(substring(method[i],1,1)),substring(method[i],2), sep = ""),
                                                                 DF = result[[2]], STATISTIC = "Chisq",
                                                                 VALUE = result[[1]], PROB = "Pr(>Chisq)", PVALUE = result[[3]]))
-			
+
 			}
 		}
 	}
-     
+
      hovTable <- hovTable[order(hovTable$GRP, hovTable$VARIABLE),]
 
-	if (!is.null(hovTable)) { 
+	if (!is.null(hovTable)) {
 		rownames(hovTable) <- c(1:nrow(hovTable))
           if (length(method) == 1) {
                colnames(hovTable) <- c("Grp", "Variable", "Method", "DF", "Statistic", paste(levels(hovTable[1,"STATISTIC"])[1], "Value"), "Prob", levels(hovTable[1,"PROB"])[1])
@@ -76,9 +76,9 @@ HeteroskedasticityTest.default <- function(data, var, grp, method = c("bartlett"
 		options(width = 5000)
           if (length(method) == 1) {  cat("Test for Homogeneity of Variances","\n")
           } else {  cat("Tests for Homogeneity of Variances","\n")  }
-		
+
 		#print(hovTable, right = FALSE, row.names = FALSE)
-		printDataFrame(hovTable)
+		STAR::printDataFrame(hovTable)
 	}
 	return(invisible(hovTable))
-} ### end stmt -- HeteroskedasticityTest 
+} ### end stmt -- HeteroskedasticityTest

@@ -20,7 +20,7 @@ printDataFrame <- function(dataFrame, border = TRUE, digits = NULL){ #UseMethod(
 # printDataFrame.default <- function(dataFrame, border = TRUE, digits = NULL) {
 
 	if (!is.data.frame(dataFrame)) { stop("The argument 'dataFrame' should be of class data.frame.") }
-	dataChar <- DataAttribute(dataFrame)[,1:2]
+	dataChar <- STAR::DataAttribute(dataFrame)[,1:2]
 	dataChar[,1] <- as.character(dataChar[,1])
 
 	colWidth <- NULL
@@ -67,7 +67,7 @@ printDataFrame <- function(dataFrame, border = TRUE, digits = NULL){ #UseMethod(
                          }
                     } else {
                          # if variable is string
-                         colWidth <- c(colWidth, max(nchar(as.character(dataChar[i,1])), max(nchar(as.character(dataFrame[,i])))) + 2)
+                         colWidth <- c(colWidth, max(nchar(as.character(dataChar[i,1])), max(nchar(as.character(dataFrame[,i])),na.rm = TRUE),na.rm = TRUE) + 2)
                     }
                }
 	     } ## end if-else stmt
