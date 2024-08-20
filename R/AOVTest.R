@@ -28,6 +28,11 @@
 AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NULL, factor4 = NULL, rep1 = NULL, rep2 = NULL, set = NULL, descriptive = FALSE, normality = FALSE, homogeneity = FALSE, pwTest = NULL, pwVar = NULL, contrastOption = NULL, sig = 0.05, outputPath = NULL) { #UseMethod("AOVTest")
 
 # AOVTest.default <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NULL, factor4 = NULL, rep1 = NULL, rep2 = NULL, set = NULL, descriptive = FALSE, normality = FALSE, homogeneity = FALSE, pwTest = NULL, pwVar = NULL, contrastOption = NULL, sig = 0.05, outputPath = NULL) {
+  returnData <- data
+  data <- data$data$pheno
+
+  aovAnalysisId <- as.numeric(Sys.time())
+
      if (is.character(data)) {
           nameData <- data
           data <- eval(parse(text = data))
@@ -136,7 +141,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
           for (z in 1:nlevels(as.factor(data[,match(set, names(data))]))) {
                proceedPrinting <- TRUE
                estimateData <- FALSE
-               setLabel <- levels(data[,match(set, names(data))])[z]
+               setLabel <- levels(as.factor(data[,match(set, names(data))]))[z]
                if (!addSet) {
                     width2 <- 5 + nchar(set) + nchar(setLabel)
                     cat(paste(rep("-", width2), collapse = ""), "\n")
@@ -317,14 +322,29 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                          cat("Test for Homogeneity of Variances\n")
                          STAR::printDataFrame(bartlett.result[,3:ncol(bartlett.result)])
                          cat("\n")
+                         aovMetrics <- data.frame(module = rep("aov",3), analysisId = rep(aovAnalysisId,3), trait = rep(respvar[i],3),
+                                                  environment = rep(setLabel[z],3), parameter = c("df", "value", "p-value"),
+                                                  method = rep(bartlett.result[,"Method"],3),
+                                                  value = c(bartlett.result[1,4], bartlett.result[1,5], bartlett.result[1,6]),
+                                                  stdError = rep(0,3))
+                         returnData$metrics <- rbind(returnData$metrics, aovMetrics)
                          rm(bartlett.result)
                     }
 
                     # --- PRINTING RESULT OF SHAPIRO WILK TEST --- #
                     if (normality) {
                          if (nrow(assumpData) >= 3 && nrow(assumpData) <= 5000) {
-                           STAR::NormalityTest(data = assumpData, var = paste(names(assumpData)[2]), grp = NULL, method = c("swilk"))
-                              cat("\n")
+                           capture.output(normality.result <- STAR::NormalityTest(data = assumpData, var = paste(names(assumpData)[2]), grp = NULL, method = c("swilk")))
+                           cat("Test for Normality\n")
+                           STAR::printDataFrame(normality.result)
+                           cat("\n")
+                           aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(aovAnalysisId,2), trait = rep(respvar[i],2),
+                                                    environment = rep(setLabel[z],2), parameter = c("value", "p-value"),
+                                                    method = rep(normality.result[,"Method"],2),
+                                                    value = c(normality.result[1,3], bartlett.result[1,4]),
+                                                    stdError = rep(0,2))
+                           returnData$metrics <- rbind(returnData$metrics, aovMetrics)
+                           rm(normality.result)
                          }
                     }
                     rm(assumpData)
@@ -531,6 +551,11 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
      } ### end stmt --- for (i in (1:length(respvar)))
 
      options(show.signif.stars = prev.option)
-     return(invisible(list(data = tempAllData, aovObject = aovresult, rvWithSigEffect = rvWithSigEffect, aovTable = tempAnova, pwOption = pwOption, model = modelRHS, model2 = modelRHS2, alpha = sig)))
+
+     # aovMetrics <-
+     #
+     # returnData <-
+     return(returnData)
+     # return(invisible(list(data = tempAllData, aovObject = aovresult, rvWithSigEffect = rvWithSigEffect, aovTable = tempAnova, pwOption = pwOption, model = modelRHS, model2 = modelRHS2, alpha = sig)))
 
 } ### end stmt -- aovTest
