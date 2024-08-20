@@ -5,9 +5,9 @@
 
 # ----------------------------------------------------------------------------------------
 
-NormalityTest <- function(data, var, grp = NULL, method = c("swilk")) UseMethod("NormalityTest")
+NormalityTest <- function(data, var, grp = NULL, method = c("swilk")){ #UseMethod("NormalityTest")
 
-NormalityTest.default <- function(data, var, grp = NULL, method = c("swilk")) {
+# NormalityTest.default <- function(data, var, grp = NULL, method = c("swilk")) {
 	if (is.character(data)) {
 		nameData <- data
 		if (!exists(nameData)) { stop(paste("The object '", nameData,"' does not exists.", sep = "")) }

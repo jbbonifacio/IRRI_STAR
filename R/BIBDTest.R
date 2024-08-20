@@ -6,9 +6,9 @@
 # Reference: agricolae package
 # -----------------------------------------------------------------
 
-BIBDTest <- function(data, respvar, trmt, block, set = NULL, method = NULL, descriptive = FALSE, normality = FALSE, homogeneity = FALSE, alpha = 0.05, outputPath = NULL) UseMethod("BIBDTest")
+BIBDTest <- function(data, respvar, trmt, block, set = NULL, method = NULL, descriptive = FALSE, normality = FALSE, homogeneity = FALSE, alpha = 0.05, outputPath = NULL){ #UseMethod("BIBDTest")
 
-BIBDTest.default <- function(data, respvar, trmt, block, set = NULL, method = NULL, descriptive = FALSE, normality = FALSE, homogeneity = FALSE, alpha = 0.05, outputPath = NULL) {
+# BIBDTest.default <- function(data, respvar, trmt, block, set = NULL, method = NULL, descriptive = FALSE, normality = FALSE, homogeneity = FALSE, alpha = 0.05, outputPath = NULL) {
 
      options(width = 5000, show.signif.star = FALSE)
      if (is.character(data)) { data <- eval(parse(text = data)) } 
@@ -16,17 +16,17 @@ BIBDTest.default <- function(data, respvar, trmt, block, set = NULL, method = NU
 	# define trmt as factors
 	if (is.numeric(data[,trmt])) { data[,trmt] <- factor(data[,trmt]) 
 	} else {
-	     if (suppressWarnings(all(!is.na(as.numeric(as.character(factor(trimStrings(data[,trmt])))))))) {
+	     if (suppressWarnings(all(!is.na(as.numeric(as.character(factor(trimws(data[,trmt])))))))) {
 	          data[,trmt] <- factor(as.numeric(data[,trmt]))
-	     } else { data[,trmt] <- factor(trimStrings(data[,trmt])) }   
+	     } else { data[,trmt] <- factor(trimws(data[,trmt])) }   
 	}
      
      # define block as factor
 	if (is.numeric(data[,block])) { data[,block] <- factor(data[,block]) 
 	} else {
-	     if (suppressWarnings(all(!is.na(as.numeric(as.character(factor(trimStrings(data[,block])))))))) {
+	     if (suppressWarnings(all(!is.na(as.numeric(as.character(factor(trimws(data[,block])))))))) {
 	          data[,block] <- factor(as.numeric(data[,block]))
-	     } else { data[,block] <- factor(trimStrings(data[,block])) }   
+	     } else { data[,block] <- factor(trimws(data[,block])) }   
 	}
      
 	#procedure <- c("lsd", "tukey", "snk", "duncan")
@@ -148,14 +148,14 @@ BIBDTest.default <- function(data, respvar, trmt, block, set = NULL, method = NU
 	          lambda <- (r * (k - 1))/(a - 1)
                
                # determine if the data set is balanced
-	          capture.output(numObsTrmt <- DescriptiveStatistics(data = tempData, var = respvar[i], grp = trmt)[,"N_NonMissObs"])
+	          capture.output(numObsTrmt <- STAR::DescriptiveStatistics(data = tempData, var = respvar[i], grp = trmt)[,"N_NonMissObs"])
                if (!all(numObsTrmt == r)) {
                     cat("Error: Cannot perform ANOVA for response variable '", respvar[i], "'. The data set is unbalanced.",sep = "", "\n\n")
                     next
                }
                
 	          # determine if the data set is balanced
-	          capture.output(numObsBlk <- DescriptiveStatistics(data = tempData, var = respvar[i], grp = block)[,"N_NonMissObs"])
+	          capture.output(numObsBlk <- STAR::DescriptiveStatistics(data = tempData, var = respvar[i], grp = block)[,"N_NonMissObs"])
 	          if (!all(numObsBlk == k)) {
 	               cat("Error: Cannot perform ANOVA for response variable '", respvar[i], "'. The data set is unbalanced.",sep = "", "\n\n")
 	               next
@@ -165,8 +165,8 @@ BIBDTest.default <- function(data, respvar, trmt, block, set = NULL, method = NU
 	          withError <- try(result1 <- lm(formula(paste(respvar[i], "~", block, "+", trmt)), data = tempData), silent = TRUE)
                
                if (class(withError) == "try-error") {
-                    msg <- trimStrings(strsplit(withError, ":")[[1]])
-                    msg <- trimStrings(paste(strsplit(msg, "\n")[[length(msg)]], collapse = " "))
+                    msg <- trimws(strsplit(withError, ":")[[1]])
+                    msg <- trimws(paste(strsplit(msg, "\n")[[length(msg)]], collapse = " "))
                     msg <- gsub("\"", "", msg)
                     cat("Error: ", msg, sep = "", "\n\n")
                     next
@@ -198,18 +198,18 @@ BIBDTest.default <- function(data, respvar, trmt, block, set = NULL, method = NU
 	          anova.table[[i]]$set[[z]]$MSError <- MSError
                
 	          # display summary information
-	          ClassInformation(tempData[,c(block, trmt, respvar[i])], respvar = respvar[i])
+	          STAR::ClassInformation(tempData[,c(block, trmt, respvar[i])], respvar = respvar[i])
 	          cat("\n\n")
                
                # display descriptive statistics
 	          if (descriptive) {
-	               DescriptiveStatistics(data, var = respvar[i], statistics = c("n", "mean", "sd", "min", "max"))
+	            STAR::DescriptiveStatistics(data, var = respvar[i], statistics = c("n", "mean", "sd", "min", "max"))
 	               cat("\n")
 	          }
                
                # create the residual data and predicted values
                residNfittedData <- NULL
-	          residNfittedData <- data.frame(PredictedValues(result1), resid(result1))
+	          residNfittedData <- data.frame(STAR::PredictedValues(result1), resid(result1))
                newNames <- make.unique(c(names(tempData), paste(respvar[i],"_pred", sep = ""), paste(respvar[i],"_resid", sep = "")), sep = "")
                colnames(residNfittedData) <- newNames[(length(newNames)-1):length(newNames)]
                
@@ -238,9 +238,9 @@ BIBDTest.default <- function(data, respvar, trmt, block, set = NULL, method = NU
 	               
 	               # --- PRINTING RESULTS OF TEST FOR HOMOGENEITY OF VARIANCES --- #
 	               if (homogeneity) {
-	                    capture.output(bartlett.result <- HeteroskedasticityTest(data = assumpData, var = names(assumpData)[ncol(assumpData)], grp = trmt, method = c("bartlett")))
+	                    capture.output(bartlett.result <- STAR::HeteroskedasticityTest(data = assumpData, var = names(assumpData)[ncol(assumpData)], grp = trmt, method = c("bartlett")))
 	                    cat("Test for Homogeneity of Variances\n")
-	                    printDataFrame(bartlett.result[,3:ncol(bartlett.result)])
+	                    STAR::printDataFrame(bartlett.result[,3:ncol(bartlett.result)])
 	                    cat("\n")
 	                    rm(bartlett.result)
 	               }
@@ -248,7 +248,7 @@ BIBDTest.default <- function(data, respvar, trmt, block, set = NULL, method = NU
 	               # --- PRINTING RESULT OF SHAPIRO WILK TEST --- #
 	               if (normality) {
 	                    if (nrow(assumpData) >= 3 && nrow(assumpData) <= 5000) {
-	                         NormalityTest(data = assumpData, var = names(assumpData)[ncol(assumpData)], grp = NULL, method = c("swilk"))
+	                      STAR::NormalityTest(data = assumpData, var = names(assumpData)[ncol(assumpData)], grp = NULL, method = c("swilk"))
 	                         cat("\n")
 	                    }
 	               }
@@ -257,7 +257,7 @@ BIBDTest.default <- function(data, respvar, trmt, block, set = NULL, method = NU
 	          
                # print the anova table
 	          cat("ANOVA TABLE\nResponse Variable: ", respvar[i], "\n", sep = "")
-	          printAOVTable(aovTable)
+	          STAR::printAOVTable(aovTable)
                cat("\n")
 	          
 	          # computation of summary statistics for adjusted and unadjusted trmt means
@@ -282,18 +282,18 @@ BIBDTest.default <- function(data, respvar, trmt, block, set = NULL, method = NU
 	          tempTable <- data.frame(RespVar = respvar[i], TrmtMean = trt.mean, AdjTrmtMean = TrmtMean.adj, AdjTrmtEffect = TrmtEffect.adj)
 	          tempTable <- data.frame(rownames(tempTable), tempTable)
 	          colnames(tempTable)[1] <- trmt
-	          printDataFrame(tempTable)
+	          STAR::printDataFrame(tempTable)
 	          trmtStat <- rbind(trmtStat, cbind(setLabel, tempTable))
                               
 	          cat("\nStandard Error\n", sep = "")
 	          tempTable <- data.frame(Diff = StdErr.diff, AdjTrmtEffect = StdErr.adjtrteff, AdjTrmtMean = StdErr.adjtrtmean)
-	          printDataFrame(tempTable)
+	          STAR::printDataFrame(tempTable)
 	          tempStat <- rbind(tempStat, cbind(setLabel, data.frame(RespVar = respvar[i], tempTable)))
 	                         
                cat("\nInterblock Estimate\n", sep = "")
 	          tempTable <- data.frame(RespVar = respvar[i], t(interblk.est))
                colnames(tempTable)[2:ncol(tempTable)] <- levels(tempData[,trmt]) 
-	          printDataFrame(tempTable)
+               STAR::printDataFrame(tempTable)
 	          tempTable <- data.frame(setLabel, RespVar = respvar[i], levels(tempData[,trmt]), interblk.est)
                names(tempTable)[3] <- trmt
 	          blkStat <- rbind(blkStat, tempTable)
@@ -311,10 +311,10 @@ BIBDTest.default <- function(data, respvar, trmt, block, set = NULL, method = NU
                     anova.table[[i]]$set[[z]]$pw$duncan <- DuncanTest(dfError, MSError, TrmtMean.adj, StdErr.adjtrtmean, StdErr.diff, alpha, a, lambda, r, k, levels(tempData[,trmt])) 
                     
                     if (is.null(method)) {
-                         if (nlevels(data[,trmt]) <= 5) { printBIBDPairwise(anova.table[[i]]$set[[z]]$pw, dfError, MSError, method = "LSD", trmtLabel = trmt)
-                         } else { printBIBDPairwise(anova.table[[i]]$set[[z]]$pw, dfError, MSError, method = "HSD", trmtLabel = trmt) }
+                         if (nlevels(data[,trmt]) <= 5) { STAR::printBIBDPairwise(anova.table[[i]]$set[[z]]$pw, dfError, MSError, method = "LSD", trmtLabel = trmt)
+                         } else { STAR::printBIBDPairwise(anova.table[[i]]$set[[z]]$pw, dfError, MSError, method = "HSD", trmtLabel = trmt) }
                     } else {
-                         printBIBDPairwise(anova.table[[i]]$set[[z]]$pw, dfError, MSError, method, trmtLabel = trmt)
+                      STAR::printBIBDPairwise(anova.table[[i]]$set[[z]]$pw, dfError, MSError, method, trmtLabel = trmt)
                     }
 	          } else { 
 	               anova.table[[i]]$set[[z]]$sigTrmt <- FALSE

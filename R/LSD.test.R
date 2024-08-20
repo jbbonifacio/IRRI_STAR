@@ -39,9 +39,9 @@
 	if (group && length(unique(trt)) > 26 ) { group <- FALSE }
     	junto <- subset(data.frame(y, trt), is.na(y) == FALSE)
 	#cat(str(junto), "\n")
-    	means <- tapply.stat(junto[, 1], junto[, 2], stat="mean") #change
-    	sds <- tapply.stat(junto[, 1], junto[, 2], stat="sd")     #change
-    	nn <- tapply.stat(junto[, 1], junto[, 2], stat="length")  #change
+    	means <- STAR::tapply.stat(junto[, 1], junto[, 2], stat="mean") #change
+    	sds <- STAR::tapply.stat(junto[, 1], junto[, 2], stat="sd")     #change
+    	nn <- STAR::tapply.stat(junto[, 1], junto[, 2], stat="length")  #change
     	std.err <- sds[, 2]/sqrt(nn[, 2])
     	Tprob <- qt(1 - alpha/2, DFerror)
     	LCL <- means[,2]-Tprob*std.err
@@ -124,7 +124,7 @@
 	 	# AAGulles added the following if-else stmt:
 	  	if (pwOrder == "means") { w<-order(means[,2],decreasing = TRUE) ## original LSD.test
 	  	} else {
-	  	     if (suppressWarnings(all(!is.na(as.numeric(as.character(factor(trimStrings(output[,1])))))))) {
+	  	     if (suppressWarnings(all(!is.na(as.numeric(as.character(factor(trimws(output[,1])))))))) {
 	  	          output[,1] <- factor(as.numeric(as.character(output[,1])))
 	  	     }
 			output <- output[order(output[,1]),]
@@ -132,7 +132,7 @@
 			w<-order(means[,1])
         	}
 	  	cat("Summary of the Result:\n", sep = "") # added by AAGulles
-	  	printDataFrame(output[,c(1,2,3,5)])	  # added by AAGulles
+	  	STAR::printDataFrame(output[,c(1,2,3,5)])	  # added by AAGulles
 	  	cat("Means with the same letter are not significantly different.\n\n") # added by AAGulles
         	output <- data.frame(output,LCI=means[w,5],UCI=means[w,6])
     	}
@@ -193,7 +193,7 @@
 		if (nrow(sigResult) != 0) {
 			colnames(sigResult) <- c("Mean Diff", "Prob")
 			cat("Significant Pairwise Mean Comparison at alpha = ", alpha,"\n")
-		  	printDataFrame(cbind("Treatment" = rownames(sigResult),sigResult))	# change by AAGulles
+			STAR::printDataFrame(cbind("Treatment" = rownames(sigResult),sigResult))	# change by AAGulles
 		}
 	 
 	 	# AAGulles suppress the following:

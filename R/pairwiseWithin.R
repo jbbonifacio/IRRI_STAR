@@ -4,9 +4,9 @@
 # Modified by: Alaine A. Gulles 
 # ----------------------------------------------------------------------
 
-pairwiseWithin <- function(data, respvar, typeTest, nobs1, nobs2, dfError, MSError, f1, f2, f3 = NULL, siglevel) UseMethod("pairwiseWithin")
+pairwiseWithin <- function(data, respvar, typeTest, nobs1, nobs2, dfError, MSError, f1, f2, f3 = NULL, siglevel){ #UseMethod("pairwiseWithin")
      
-pairwiseWithin.default <- function(data, respvar, typeTest, nobs1, nobs2, dfError, MSError, f1, f2, f3 = NULL, siglevel) {
+# pairwiseWithin.default <- function(data, respvar, typeTest, nobs1, nobs2, dfError, MSError, f1, f2, f3 = NULL, siglevel) {
       comparison <- NULL
 	if (nlevels(data[,f1]) > 26) {
 		for (j in (1:nobs2)) {
@@ -56,12 +56,12 @@ pairwiseWithin.default <- function(data, respvar, typeTest, nobs1, nobs2, dfErro
 			#	cat("\n")
 			#}
 			#cat("\n")
-			printDataFrame(result.pw$testStat, digits = 4)
+		  STAR::printDataFrame(result.pw$testStat, digits = 4)
 			cat("\n")
 		}
 		colnames(result.pw$summary)[1] <- f1
 		cat("Summary:", "\n")
-		printDataFrame(comparison, digits = 4)
+		STAR::printDataFrame(comparison, digits = 4)
 		cat("Means with the same letter are not significantly different\n\n")
 	}    
 

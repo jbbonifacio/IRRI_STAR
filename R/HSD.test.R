@@ -33,9 +33,9 @@
 
 	if (group && length(unique(trt)) > 26 ) { group <- FALSE }
     	junto <- subset(data.frame(y, trt), is.na(y) == FALSE)
-    	means <- ExpDes.pt::tapply.stat(junto[,1],junto[,2],stat="mean") # change
-    	sds <-   ExpDes.pt::tapply.stat(junto[,1],junto[,2],stat="sd") #change
-   	nn <-   ExpDes.pt::tapply.stat(junto[,1],junto[,2],stat="length") # change
+    	means <- STAR::tapply.stat(junto[,1],junto[,2],stat="mean") # change
+    	sds <-   STAR::tapply.stat(junto[,1],junto[,2],stat="sd") #change
+   	nn <-   STAR::tapply.stat(junto[,1],junto[,2],stat="length") # change
     	means<-data.frame(means,std.err=sds[,2]/sqrt(nn[,2]),replication=nn[,2])
     	names(means)[1:2]<-c(name.t,name.y)
 	# row.names(means)<-means[,1]
@@ -90,7 +90,7 @@
 			w<-order(means[,1])
         	}
 	  	cat("Summary of the Result:\n", sep = "") # added by AAGulles
-	  	printDataFrame(output[,c(1,2,3,5)])	  # added by AAGulles
+	  	STAR::printDataFrame(output[,c(1,2,3,5)])	  # added by AAGulles
 	  	cat("Means with the same letter are not significantly different.\n\n") # added by AAGulles
 	} else {
 		comb <-combn(ntr,2)
@@ -144,7 +144,7 @@
 		if (nrow(sigResult) != 0) {
 			colnames(sigResult) <- c("Mean Diff", "Prob")
 			cat("Significant Pairwise Mean Comparison at alpha = ", alpha,"\n")
-		  	printDataFrame(cbind("Treatment" = rownames(sigResult),sigResult))	# change by AAGulles
+			STAR::printDataFrame(cbind("Treatment" = rownames(sigResult),sigResult))	# change by AAGulles
 		}
 
 		# AAGulles suppress the following:

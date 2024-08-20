@@ -34,9 +34,9 @@
 
 	if (group && length(unique(trt)) > 26 ) { group <- FALSE }
     	junto <- subset(data.frame(y, trt), is.na(y) == FALSE)
-    	means <- tapply.stat(junto[,1],junto[,2],stat="mean") # change
-    	sds <-   tapply.stat(junto[,1],junto[,2],stat="sd") #change
-    	nn <-   tapply.stat(junto[,1],junto[,2],stat="length") # change
+    	means <- STAR::tapply.stat(junto[,1],junto[,2],stat="mean") # change
+    	sds <-   STAR::tapply.stat(junto[,1],junto[,2],stat="sd") #change
+    	nn <-   STAR::tapply.stat(junto[,1],junto[,2],stat="length") # change
     	means<-data.frame(means,std.err=sds[,2]/sqrt(nn[,2]),replication=nn[,2])
     	names(means)[1:2]<-c(name.t,name.y)
 	# row.names(means)<-means[,1]
@@ -95,7 +95,7 @@
 	#	cat("\n")
 	#}
 
-	printDataFrame(DUNCAN, digits = 4)
+	STAR::printDataFrame(DUNCAN, digits = 4)
 	cat("\n")
 	if (group) {
 		#cat("\nMeans with the same letter are not significantly different.")
@@ -104,14 +104,14 @@
 		colnames(output)[1] <- name.t  # added by AAGulles
 	  	# AAGulles added the following if-else stmt:
 	 	if (pwOrder == "trmt") { 
-	 	     if (suppressWarnings(all(!is.na(as.numeric(as.character(factor(trimStrings(output[,1])))))))) {
+	 	     if (suppressWarnings(all(!is.na(as.numeric(as.character(factor(trimws(output[,1])))))))) {
 	 	          output[,1] <- factor(as.numeric(as.character(output[,1])))
 	 	     }
 			output <- output[order(output[,1]),]
 			rownames(output) <- 1:nrow(output)
         	}
 		cat("Summary of the Result:\n", sep = "") # added by AAGulles
-		printDataFrame(output[,c(1,2,3,5)])	  # added by AAGulles
+		STAR::printDataFrame(output[,c(1,2,3,5)])	  # added by AAGulles
 	  	cat("Means with the same letter are not significantly different.\n\n") # added by AAGulles
 	}
 
@@ -173,7 +173,7 @@
 		if (nrow(sigResult) != 0) {
 			colnames(sigResult) <- c("Mean Diff", "Prob")
 			cat("Significant Pairwise Mean Comparison at alpha = ", alpha,"\n")
-		  	printDataFrame(cbind("Treatment" = rownames(sigResult),sigResult))	# change by AAGulles
+			STAR::printDataFrame(cbind("Treatment" = rownames(sigResult),sigResult))	# change by AAGulles
 		}
 		
 		# suppress the following stmt by AAGulles

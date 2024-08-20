@@ -4,9 +4,9 @@
 # Modified by: Alaine A. Gulles 
 # ----------------------------------------------------------------------
 
-pairwiseAmong <- function(data, respvar, typeTest, trmt, dfError, MSError, siglevel) UseMethod("pairwiseAmong")
+pairwiseAmong <- function(data, respvar, typeTest, trmt, dfError, MSError, siglevel){ #UseMethod("pairwiseAmong")
 
-pairwiseAmong.default <- function(data, respvar, typeTest, trmt, dfError, MSError, siglevel) {
+# pairwiseAmong.default <- function(data, respvar, typeTest, trmt, dfError, MSError, siglevel) {
      options(width = 5000)
      if (nlevels(data[,trmt]) > 26) {
           command <- paste(typeTest, ".test(data['",respvar,"'], data['",trmt,"'], dfError, MSError, alpha = ", siglevel,", group = FALSE, pwOrder = 'trmt')", sep = "")
@@ -63,7 +63,7 @@ pairwiseAmong.default <- function(data, respvar, typeTest, trmt, dfError, MSErro
                          cat(formatC(paste(rep("-",maxWidthLabel+(length(singleVal)*maxWidthEntry)),collapse = ""), width = maxWidthLabel+(length(singleVal)*maxWidthEntry)), "\n", sep = "")
                          
                          cat("\nSummary: \n")
-                         printDataFrame(summaryTable, digits = 4)
+                         STAR::printDataFrame(summaryTable, digits = 4)
                          cat("Means with the same letter are not significantly different\n\n")
                     } 
                     
