@@ -341,7 +341,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                            aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(aovAnalysisId,2), trait = rep(respvar[i],2),
                                                     environment = rep(setLabel[z],2), parameter = c("value", "p-value"),
                                                     method = rep(normality.result[,"Method"],2),
-                                                    value = c(normality.result[1,3], bartlett.result[1,4]),
+                                                    value = c(normality.result[1,3], normality.result[1,4]),
                                                     stdError = rep(0,2))
                            returnData$metrics <- rbind(returnData$metrics, aovMetrics)
                            rm(normality.result)
