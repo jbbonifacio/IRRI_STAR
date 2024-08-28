@@ -1,19 +1,27 @@
 # ----------------------------------------------------------------------
 # pairwiseAmong: Function for displaying the mean comparison
 # Created by: Alaine A. Gulles for International Rice Research Institute
-# Modified by: Alaine A. Gulles 
+# Modified by: Alaine A. Gulles
 # ----------------------------------------------------------------------
+# data
+# respvar
+# typeTest = pwTestChoice
+# trmt = effect
+# dfError = aovTable[[3]][[1]][nobs(aovTable[[3]][[1]]),1]
+# MSError = aovTable[[3]][[1]][nrow(aovTable[[3]][[1]]),3]
+# siglevel
+# rdata = returnData
 
-pairwiseAmong <- function(data, respvar, typeTest, trmt, dfError, MSError, siglevel){ #UseMethod("pairwiseAmong")
+pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, MSError, siglevel, rdata){ #UseMethod("pairwiseAmong")
 
 # pairwiseAmong.default <- function(data, respvar, typeTest, trmt, dfError, MSError, siglevel) {
      options(width = 5000)
      if (nlevels(data[,trmt]) > 26) {
-          command <- paste(typeTest, ".test(data['",respvar,"'], data['",trmt,"'], dfError, MSError, alpha = ", siglevel,", group = FALSE, pwOrder = 'trmt')", sep = "")
+          command <- paste("STAR::",typeTest, ".test(data['",respvar,"'], data['",trmt,"'], dfError, MSError, alpha = ", siglevel,", group = FALSE, pwOrder = 'trmt')", sep = "")
           eval(parse(text = command))
      } else {
           if (length(typeTest) == 1) {
-               command <- paste(typeTest, ".test(data['",respvar,"'], data['",trmt,"'], dfError, MSError, alpha = ", siglevel,", group = TRUE, pwOrder = 'trmt')", sep = "")
+               command <- paste("STAR::",typeTest, ".test(data['",respvar,"'], data['",trmt,"'], dfError, MSError, alpha = ", siglevel,", group = TRUE, pwOrder = 'trmt')", sep = "")
                eval(parse(text = command))
           } else {
                singleVal <- na.omit(match(typeTest, c("LSD", "HSD", "scheffe")))
@@ -21,7 +29,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, dfError, MSError, sigle
                     summaryTable <- NULL
                     summaryStat <- NULL
                     for (i in (1:length(singleVal))) {
-                         command <- paste(c("LSD", "HSD", "scheffe")[singleVal[i]], ".test(data['",respvar,"'], data['",trmt,"'], dfError, MSError, alpha = ", siglevel,", group = TRUE, pwOrder = 'trmt')", sep = "")
+                         command <- paste("STAR::",c("LSD", "HSD", "scheffe")[singleVal[i]], ".test(data['",respvar,"'], data['",trmt,"'], dfError, MSError, alpha = ", siglevel,", group = TRUE, pwOrder = 'trmt')", sep = "")
                          if (length(singleVal) == 1) { eval(parse(text = command))
                          } else {
                               capture.output(resultPW <- eval(parse(text = command)))
@@ -39,17 +47,17 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, dfError, MSError, sigle
                               }
                          }
                     }
-                    
+
                     if (length(singleVal) > 1) {
                          maxWidthEntry <- max(nchar(dfError), nchar(round(MSError,0))) + 7
                          cat("\n")
                          cat(formatC("Alpha", format = "s", width = 25, flag = "-"), formatC(siglevel, format = "f", digits = 2, width = maxWidthEntry , flag = "#"), "\n", sep = "")
                          cat(formatC("Error Degrees of Freedom", format = "s", width = 25, flag = "-"), formatC(dfError, format = "d", width = maxWidthEntry , flag = "#"), "\n", sep = "")
                          cat(formatC("Error Mean Square", format = "s", width = 25, flag = "-"), formatC(MSError, format = "f", digits = 4, width = maxWidthEntry , flag = "#"), "\n\n", sep = "")
-                         
+
                          maxWidthEntry <- nchar(max(round(summaryStat,0))) + 7
                          maxWidthLabel <- max(nchar(rownames(summaryStat))) + 2
-                         
+
                          cat(formatC(paste(rep("-",maxWidthLabel+(length(singleVal)*maxWidthEntry)),collapse = ""), width = maxWidthLabel+(length(singleVal)*maxWidthEntry)), "\n", sep = "")
                          cat(formatC("", format = "s", width = maxWidthLabel, flag = "-"), formatC(colnames(summaryStat), format = "s", width = maxWidthEntry, flag = "#"), "\n", sep = "")
                          cat(formatC(paste(rep("-",maxWidthLabel+(length(singleVal)*maxWidthEntry)),collapse = ""), width = maxWidthLabel+(length(singleVal)*maxWidthEntry)), "\n", sep = "")
@@ -61,14 +69,16 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, dfError, MSError, sigle
                               cat("\n")
                          }
                          cat(formatC(paste(rep("-",maxWidthLabel+(length(singleVal)*maxWidthEntry)),collapse = ""), width = maxWidthLabel+(length(singleVal)*maxWidthEntry)), "\n", sep = "")
-                         
+
                          cat("\nSummary: \n")
                          STAR::printDataFrame(summaryTable, digits = 4)
                          cat("Means with the same letter are not significantly different\n\n")
-                    } 
-                    
-               } 
-               
+
+
+                    }
+
+               }
+
                rangeVal <- na.omit(match(typeTest, c("duncan", "SNK")))
                if (length(rangeVal) != 0) {
                     for (i in (1:length(rangeVal))) {
@@ -78,5 +88,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, dfError, MSError, sigle
                }
           }
      }
-     
+  
+  return(returnData)
+  
 } ## END FUNCTION

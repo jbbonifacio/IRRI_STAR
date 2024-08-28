@@ -6,24 +6,26 @@
 # Modified by: Alaine A. Gulles 07.19.2013
 # Note: Include remarks when data is unbalanced, when no balanced data can be generated
 # -------------------------------------------------------------------------------
-# data = read.csv("C:/Users/JBonifacio.CGIARAD/Downloads/SeedingRate.csv")
-# design = "RCBD"
-# respvar = "GrainYield"
-# factor1 = "SeedingRate"
-# factor2 = NULL
-# factor3 = NULL
-# factor4 = NULL
-# rep1 = "Rep"
-# rep2 = NULL
-# set = NULL
-# descriptive = TRUE
-# normality = TRUE
-# homogeneity = TRUE
-# pwTest = NULL
-# pwVar = NULL
-# contrastOption = NULL
-# sig = 0.01
-# outputPath = NULL
+data = read.csv("C:/Users/JBonifacio.CGIARAD/Downloads/GomezSplit2RCBD.csv")
+load("C:/Users/JBonifacio.CGIARAD/Downloads/try_AOV.RData")
+data <- result
+design = "RCBD"
+respvar = "GrainYield"
+factor1 = "SeedingRate"
+factor2 = NULL
+factor3 = NULL
+factor4 = NULL
+rep1 = "Rep"
+rep2 = NULL
+set = NULL
+descriptive = TRUE
+normality = TRUE
+homogeneity = TRUE
+pwTest = NULL
+pwVar = NULL
+contrastOption = NULL
+sig = 0.01
+outputPath = NULL
 
 AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NULL, factor4 = NULL, rep1 = NULL, rep2 = NULL, set = NULL, descriptive = FALSE, normality = FALSE, homogeneity = FALSE, pwTest = NULL, pwVar = NULL, contrastOption = NULL, sig = 0.05, outputPath = NULL) { #UseMethod("AOVTest")
 
@@ -266,7 +268,12 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                          tempAnova[[i]][[z]][[1]][1:numEffects, "Pr(>F)"] <- pf(tempAnova[[i]][[z]][[1]][1:numEffects,"F value"], tempAnova[[i]][[z]][[1]][1:numEffects,"Df"], dfError, lower.tail = FALSE)
                     }
                } else { tempAnova[[i]][[z]] <- summary(result) }
-               tempAOVTable <- STAR::ConstructAOVTable(tempAnova[[i]][[z]][[1]])
+               if(length(tempAnova[[i]][[z]])>1){
+                 tempAOVTable <- STAR::ConstructAOVTable.summary.aovlist(tempAnova[[i]][[z]])
+               } else{
+                 tempAOVTable <- STAR::ConstructAOVTable.summary.aov(tempAnova[[i]][[z]])
+               }
+               
 
                # -- PRINTING CLASS LEVEL INFORMATION -- #
                #ClassInformation(tempData[, c(factor1, factor2, factor3, factor4, rep1, rep2, respvar[i])], respvar = respvar[i])
@@ -282,7 +289,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
 
                # -- CREATE THE RESIDUAL DATA AND PREDICTED VALUES -- #
                residNfittedData <- NULL
-               residNfittedData <- data.frame(STAR::PredictedValues(result))
+               residNfittedData <- data.frame(STAR::PredictedValues.aovlist(result))
                if (inherits(result, what = "aovlist")) { residNfittedData <- data.frame(residNfittedData,proj(result)[[length(result)]][,"Residuals"])
                } else { residNfittedData <- data.frame(residNfittedData, residuals(result)) }
                colnames(residNfittedData) <- c(paste(respvar[i],"pred", sep = "_"), paste(respvar[i],"resid", sep = "_"))
@@ -323,9 +330,9 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                          STAR::printDataFrame(bartlett.result[,3:ncol(bartlett.result)])
                          cat("\n")
                          aovMetrics <- data.frame(module = rep("aov",3), analysisId = rep(aovAnalysisId,3), trait = rep(respvar[i],3),
-                                                  environment = rep(setLabel[z],3), parameter = c("df", "value", "p-value"),
+                                                  environment = rep(setLabel[z],3), parameter = c("df", "value", "Pr(>F)"),
                                                   method = rep(bartlett.result[,"Method"],3),
-                                                  value = c(bartlett.result[1,4], bartlett.result[1,5], bartlett.result[1,6]),
+                                                  value = unlist(unname(bartlett.result[,4:6])),
                                                   stdError = rep(0,3))
                          returnData$metrics <- rbind(returnData$metrics, aovMetrics)
                          rm(bartlett.result)
@@ -339,9 +346,9 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                            STAR::printDataFrame(normality.result)
                            cat("\n")
                            aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(aovAnalysisId,2), trait = rep(respvar[i],2),
-                                                    environment = rep(setLabel[z],2), parameter = c("value", "p-value"),
+                                                    environment = rep(setLabel[z],2), parameter = c("value", "Pr(>F)"),
                                                     method = rep(normality.result[,"Method"],2),
-                                                    value = c(normality.result[1,3], normality.result[1,4]),
+                                                    value = unlist(unname(normality.result[,3:4])),
                                                     stdError = rep(0,2))
                            returnData$metrics <- rbind(returnData$metrics, aovMetrics)
                            rm(normality.result)
@@ -383,6 +390,17 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                  STAR::printAOVTable(tempAOVTable)
                     if (estimateData) { cat("REMARK: Raw data and estimates of the missing values are used.\n") }
                     cat("\n")
+                    tempAovMetrics <- NULL
+                    for(iRow in 1:nrow(tempAOVTable)){
+                      tempAovMetrics <- data.frame(module = rep("aov",ncol(tempAOVTable)), analysisId = rep(aovAnalysisId,ncol(tempAOVTable)), trait = rep(respvar[i],ncol(tempAOVTable)),
+                                               environment = rep(setLabel[z],ncol(tempAOVTable)), parameter = c("df", "Sum of Square", "Mean Square","F Value", "Pr(>F)"),
+                                               method = paste0("aovTable_",trimws(rownames(tempAOVTable)[iRow])),
+                                               value = unlist(unname(tempAOVTable[iRow,1:ncol(tempAOVTable)])),
+                                               stdError = rep(0,ncol(tempAOVTable)))
+                      aovMetrics <- rbind(aovMetrics, tempAovMetrics)
+                    }
+
+                    returnData$metrics <- rbind(returnData$metrics, aovMetrics)
                } else {
                  STAR::ContrastCompute(data = tempData, aovTable = tempAnova[[i]][[z]], mymodel, mymodel2,contrast.option = contrastOption)
                     if (estimateData) { cat("REMARK: Raw data and estimates of the missing values are used.\n") }
@@ -415,6 +433,13 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                STAR::printDataFrame(as.data.frame(summaryStat))
                if (estimateData) { cat("REMARK: Raw data and estimates of the missing values are used.\n") }
                cat("\n")
+               aovMetrics <- data.frame(module = rep("aov",ncol(summaryStat)), analysisId = rep(aovAnalysisId,ncol(summaryStat)), trait = rep(respvar[i],ncol(summaryStat)),
+                                        environment = rep(setLabel[z],ncol(summaryStat)), parameter = colnames(summaryStat),
+                                        method = rep("summaryStat",ncol(summaryStat)),
+                                        value = unlist(unname(summaryStat[1,])),
+                                        stdError = rep(0,ncol(summaryStat)))
+
+               returnData$metrics <- rbind(returnData$metrics, aovMetrics)
 
                if (!estimateData) {
                     if (designChoice == 1 || designChoice == 2 || designChoice == 3) {
@@ -424,6 +449,14 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                               cat("Standard Errors\n")
                               STAR::printDataFrame(stdErrTable)
                               cat("\n")
+
+                              aovMetrics <- data.frame(module = rep("aov",nrow(stdErrTable)), analysisId = rep(aovAnalysisId,nrow(stdErrTable)), trait = rep(respvar[i],nrow(stdErrTable)),
+                                                       environment = rep(setLabel[z],nrow(stdErrTable)), parameter = rep("stdError",nrow(stdErrTable)),
+                                                       method = paste0("stdErr_",stdErrTable[,1]),
+                                                       value = unlist(unname(stdErrTable[,2])),
+                                                       stdError = rep(0,ncol(stdErrTable)))
+
+                              returnData$metrics <- rbind(returnData$metrics, aovMetrics)
                          }
                     }
                }
@@ -494,11 +527,11 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                if (!is.null(sigEffect)) {
                     if (!is.na(match(respvar[i], pwVar))) {
                          for (j in (1:length(sigEffect))) {
-                           STAR::pairwiseComparison(tempAnova[[i]][[z]], design, trimws(sigEffect[j]), data = tempData, respvar[i], pwTest, siglevel = sig)
+                           returnData <- STAR::pairwiseComparison(tempAnova[[i]][[z]], design, trimws(sigEffect[j]), data = tempData, respvar[i], setLabel[z], pwTest, siglevel = sig, rdata = returnData)
                          }
                     } else {
                          for (j in (1:length(sigEffect))) {
-                           STAR::pairwiseComparison(tempAnova[[i]][[z]], design, trimws(sigEffect[j]), data = tempData, respvar[i], pwTest = NULL, siglevel = sig)
+                           returnData <- STAR::pairwiseComparison(tempAnova[[i]][[z]], design, trimws(sigEffect[j]), data = tempData, respvar[i], setLabel[z], pwTest = NULL, siglevel = sig, rdata = returnData)
                          }
                     }
                }
