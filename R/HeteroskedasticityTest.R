@@ -73,12 +73,12 @@ HeteroskedasticityTest <- function(data, var, grp, method = c("bartlett")){ #Use
           } else {
                colnames(hovTable) <- c("Grp", "Variable", "Method", "DF", "Statistic", "Value", "Prob", "p Value")
           }
-		options(width = 5000)
-          if (length(method) == 1) {  cat("Test for Homogeneity of Variances","\n")
-          } else {  cat("Tests for Homogeneity of Variances","\n")  }
+		# options(width = 5000)
+          # if (length(method) == 1) {  cat("Test for Homogeneity of Variances","\n")
+          # } else {  cat("Tests for Homogeneity of Variances","\n")  }
 
 		#print(hovTable, right = FALSE, row.names = FALSE)
-		STAR::printDataFrame(hovTable)
+		# STAR::printDataFrame(hovTable)
 	}
 	return(invisible(hovTable))
 } ### end stmt -- HeteroskedasticityTest

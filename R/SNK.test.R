@@ -5,8 +5,7 @@
 
 # AAGulles added the parameter order
 
-`SNK.test` <-
-function (y, trt, DFerror, MSerror, alpha=0.05, group=TRUE,main = NULL, pwOrder = c("trmt", "means")) {
+`SNK.test` <- function (y, trt, DFerror, MSerror, alpha=0.05, group=TRUE,main = NULL, pwOrder = c("trmt", "means")) {
 	pwOrder <- match.arg(pwOrder)	# added by AAGulles
 	name.y <- paste(deparse(substitute(y)))
     	# name.t <- paste(deparse(substitute(trt)))
@@ -71,21 +70,21 @@ function (y, trt, DFerror, MSerror, alpha=0.05, group=TRUE,main = NULL, pwOrder 
 	# print(SNK)
 
 	# AAGulles added the following:
-	if (!is.null(main)) { cat("\n", main,"\n", sep = "") }
-    	cat("\nStudent Newman Keuls (SNK) Test\n\n", sep = "") # added by AAGulles
+	# if (!is.null(main)) { cat("\n", main,"\n", sep = "") }
+    	# cat("\nStudent Newman Keuls (SNK) Test\n\n", sep = "") # added by AAGulles
    
-    	maxWidth <- max(nchar(round(MSerror)), nchar(DFerror)) + 7
-    	labelWidth <- 29
-	cat(formatC("Alpha", format = "s", width = labelWidth, flag = "-"), formatC(alpha, format = "f", digits = 2, width =  maxWidth, flag = "#"), "\n",sep = "")  
-    	cat(formatC("Error Degrees of Freedom", format = "s", width = labelWidth, flag = "-"), formatC(DFerror, format = "d", width =  maxWidth, flag = "#"), "\n",sep = "")  	
-    	cat(formatC("Error Mean Square", format = "s", width = labelWidth, flag = "-"), formatC(MSerror, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
+    	# maxWidth <- max(nchar(round(MSerror)), nchar(DFerror)) + 7
+    	# labelWidth <- 29
+	# cat(formatC("Alpha", format = "s", width = labelWidth, flag = "-"), formatC(alpha, format = "f", digits = 2, width =  maxWidth, flag = "#"), "\n",sep = "")  
+    	# cat(formatC("Error Degrees of Freedom", format = "s", width = labelWidth, flag = "-"), formatC(DFerror, format = "d", width =  maxWidth, flag = "#"), "\n",sep = "")  	
+    	# cat(formatC("Error Mean Square", format = "s", width = labelWidth, flag = "-"), formatC(MSerror, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
 		
-	if (length(nr) > 1) {
-		cat(formatC("Harmonic Mean of Cell Sizes", format = "s", width = labelWidth, flag = "-"), formatC(nr1, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
+	# if (length(nr) > 1) {
+		# cat(formatC("Harmonic Mean of Cell Sizes", format = "s", width = labelWidth, flag = "-"), formatC(nr1, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
 		# cat("\nHarmonic Mean of Cell Sizes ", nr1 )
 		# cat("\n\nDifferent value for each comparison")
-	}
-	cat("\n")
+	# }
+	# cat("\n")
 	#cat(formatC(colnames(SNK)[1], format = "s", width = maxLabelTable, flag = "-"), formatC(colnames(SNK)[2:ncol(SNK)], format = "d", width = maxWidthTable, flag = "#"), "\n", sep = "")
 	#for (i in (1:2)) {
 	#	cat(formatC(as.character(SNK[i, 1]), format = "s", width = maxLabelTable, flag = "-"), sep = "")
@@ -95,8 +94,8 @@ function (y, trt, DFerror, MSerror, alpha=0.05, group=TRUE,main = NULL, pwOrder 
 	#	cat("\n")
 	#}
      
-	STAR::printDataFrame(SNK, digits = 4)
-	cat("\n")
+	# STAR::printDataFrame(SNK, digits = 4)
+	# cat("\n")
 
 	if (group) {
 		# cat("\nMeans with the same letter are not significantly different.")
@@ -111,9 +110,9 @@ function (y, trt, DFerror, MSerror, alpha=0.05, group=TRUE,main = NULL, pwOrder 
 			output <- output[order(output[,1]),]
 			rownames(output) <- 1:nrow(output)
         	}
-		cat("Summary of the Result:\n", sep = "") # added by AAGulles
-		STAR::printDataFrame(output[,c(1,2,3,5)])	  # added by AAGulles
-	  	cat("Means with the same letter are not significantly different.\n\n") # added by AAGulles
+		# cat("Summary of the Result:\n", sep = "") # added by AAGulles
+		# STAR::printDataFrame(output[,c(1,2,3,5)])	  # added by AAGulles
+	  	# cat("Means with the same letter are not significantly different.\n\n") # added by AAGulles
 	}
 
 	if (!group) {
@@ -172,8 +171,8 @@ function (y, trt, DFerror, MSerror, alpha=0.05, group=TRUE,main = NULL, pwOrder 
 		colnames(output) <- c("MeanDiff", "Prob", "Sig")
 		if (nrow(sigResult) != 0) {
 			colnames(sigResult) <- c("Mean Diff", "Prob")
-			cat("Significant Pairwise Mean Comparison at alpha = ", alpha,"\n")
-			STAR::printDataFrame(cbind("Treatment" = rownames(sigResult),sigResult))	# change by AAGulles
+			# cat("Significant Pairwise Mean Comparison at alpha = ", alpha,"\n")
+			# STAR::printDataFrame(cbind("Treatment" = rownames(sigResult),sigResult))	# change by AAGulles
 		}
 		
 		# suppress the following stmt by AAGulles

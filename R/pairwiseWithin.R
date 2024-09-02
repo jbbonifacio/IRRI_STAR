@@ -3,18 +3,6 @@
 # Created by: Alaine A. Gulles for International Rice Research Institute
 # Modified by: Alaine A. Gulles
 # ----------------------------------------------------------------------
-# data
-# respvar
-# typeTest = pwTestChoice[k]
-# nobs1 = nlevels(data[,tempFactor[j]])
-# nobs2 = nlevels(data[,atLevel[j]])
-# dfError = df[[j]]
-# MSError = MSE[[j]]
-# f1 = tempFactor[j]
-# f2 = atLevel[j]
-# f3=NULL
-# siglevel = siglevel
-
 
 pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, dfError, MSError, f1, f2, f3 = NULL, siglevel, returnData){ #UseMethod("pairwiseWithin")
 
@@ -49,7 +37,7 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 	      for (j in (1:nobs2)) {
       		# k = 1 + 2*(j - 1)
 			        command <- paste("STAR::",typeTest, ".test(data['",respvar,"'][(data['",f2,"']) == levels(data[,'",f2,"'])[[",j,"]]",f3,"], data['",f1,"'][(data['",f2,"']) == levels(data[,'",f2,"'])[[",j,"]]",f3,"], dfError, MSError, alpha = ",siglevel,", group = TRUE, pwOrder = 'trmt')", sep = "")
-	            capture.output(result.pw <- eval(parse(text = command)))
+			        result.pw <- eval(parse(text = command))
 
 	            addComparison <- result.pw$summary[,c(1,3,2,4,5)]
 	            addComparison[,f2] <- levels(data[,f2])[[j]]
@@ -59,20 +47,20 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 
 	      } ### end stmt -- for (j in 1:nobs2)
 
-		options(width = 5000)
-		cat("\n", result.pw$method,"\n\n", sep = "")
-		if (typeTest == "LSD" || typeTest == "HSD" || typeTest == "scheffe") {
-			maxWidthEntry <- max(nchar(dfError), nchar(round(MSError, 0)), nchar(round(result.pw$tabValue, 0)), nchar(round(result.pw$testStat, 0))) + 7
-		} else {
-			maxWidthEntry <- max(nchar(dfError), nchar(round(MSError, 0))) + 7
-		}
+		# options(width = 5000)
+		# cat("\n", result.pw$method,"\n\n", sep = "")
+		# if (typeTest == "LSD" || typeTest == "HSD" || typeTest == "scheffe") {
+		# 	maxWidthEntry <- max(nchar(dfError), nchar(round(MSError, 0)), nchar(round(result.pw$tabValue, 0)), nchar(round(result.pw$testStat, 0))) + 7
+		# } else {
+		# 	maxWidthEntry <- max(nchar(dfError), nchar(round(MSError, 0))) + 7
+		# }
 
-		cat(formatC("Alpha", format = "s", width = 25, flag = "-"), formatC(siglevel, format = "f", digits = 2, width = maxWidthEntry, flag = "#"), "\n", sep = "")
-		cat(formatC("Error Degrees of Freedom", format = "s", width = 25, flag = "-"), formatC(dfError, format = "d", width = maxWidthEntry, flag = "#"), "\n", sep = "")
-		cat(formatC("Error Mean Square", format = "s", width = 25, flag = "-"), formatC(MSError, format = "f", digits = 4, width = maxWidthEntry, flag = "#"), "\n", sep = "")
+		# cat(formatC("Alpha", format = "s", width = 25, flag = "-"), formatC(siglevel, format = "f", digits = 2, width = maxWidthEntry, flag = "#"), "\n", sep = "")
+		# cat(formatC("Error Degrees of Freedom", format = "s", width = 25, flag = "-"), formatC(dfError, format = "d", width = maxWidthEntry, flag = "#"), "\n", sep = "")
+		# cat(formatC("Error Mean Square", format = "s", width = 25, flag = "-"), formatC(MSError, format = "f", digits = 4, width = maxWidthEntry, flag = "#"), "\n", sep = "")
 		if (typeTest == "LSD" || typeTest == "HSD" || typeTest == "scheffe") {
-		  cat(formatC("Critical Value", format = "s", width = 25, flag = "-"), formatC(result.pw$tabValue, format = "f", digits = 4, width =  maxWidthEntry, flag = "#"), "\n", sep = "")
-		  cat(formatC("Test Statistic", format = "s", width = 25, flag = "-"), formatC(result.pw$testStat, format = "f", digits = 4, width =  maxWidthEntry, flag = "#"), "\n\n", sep = "")
+		  # cat(formatC("Critical Value", format = "s", width = 25, flag = "-"), formatC(result.pw$tabValue, format = "f", digits = 4, width =  maxWidthEntry, flag = "#"), "\n", sep = "")
+		  # cat(formatC("Test Statistic", format = "s", width = 25, flag = "-"), formatC(result.pw$testStat, format = "f", digits = 4, width =  maxWidthEntry, flag = "#"), "\n\n", sep = "")
 		  
 		  aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(aovAnalysisId,2), trait = rep(respvar,2),
 		                           environment = rep(environment,2), parameter = c("Critical Value","Test Statistics"),
@@ -83,7 +71,7 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 		  returnData$metrics <- rbind(returnData$metrics, aovMetrics)
 	            
 		} else {
-			cat("\n")
+			# cat("\n")
 			#maxWidthLabel <- max(nchar(colnames(result.pw$testStat)[1]), max(nchar(as.character(result.pw$testStat[,1])))) + 2
 			#maxWidthEntry <- nchar(max(round(result.pw$testStat[,2:ncol(result.pw$testStat)],0))) + 7
 			#cat(formatC(colnames(result.pw$testStat)[1], format = "s", width = maxWidthLabel, flag = "-"), formatC(colnames(result.pw$testStat)[2:ncol(result.pw$testStat)], format = "d", width = maxWidthLabel, flag = "#"), "\n", sep = "")
@@ -95,8 +83,8 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 			#	cat("\n")
 			#}
 			#cat("\n")
-		  STAR::printDataFrame(result.pw$testStat, digits = 4)
-			cat("\n")
+		  # STAR::printDataFrame(result.pw$testStat, digits = 4)
+			# cat("\n")
 			
 			aovMetrics <- data.frame(module = rep("aov",1), analysisId = rep(aovAnalysisId,1), trait = rep(respvar,1),
 			                         environment = rep(environment,1), parameter = c("Test Statistics"),
@@ -107,9 +95,9 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 			returnData$metrics <- rbind(returnData$metrics, aovMetrics)
 		}
 		colnames(result.pw$summary)[1] <- f1
-		cat("Summary:", "\n")
-		STAR::printDataFrame(comparison, digits = 4)
-		cat("Means with the same letter are not significantly different\n\n")
+		# cat("Summary:", "\n")
+		# STAR::printDataFrame(comparison, digits = 4)
+		# cat("Means with the same letter are not significantly different\n\n")
 		
 		aovPredictions <- data.frame(module = rep("aov",nrow(comparison)), analysisId = rep(aovAnalysisId,nrow(comparison)), 
 		                             trait = rep(respvar,nrow(comparison)), environment = rep(environment,nrow(comparison)), 

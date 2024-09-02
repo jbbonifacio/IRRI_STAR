@@ -4,16 +4,6 @@
 # Modified by: Alaine A. Gulles
 # ----------------------------------------------------------------------
 
-# aovTable <- tempAnova[[i]][[z]]
-# design <- design
-# effect <- trimws(sigEffect[j])
-# data = tempData
-# respvar <- respvar[i]
-# pwTest <- NULL
-# siglevel = sig
-# rdata = returnData
-
-
 pairwiseComparison <- function(aovTable, design, effect, data, respvar, environment, pwTest = NULL, siglevel = 0.05, rdata){ #UseMethod("pairwiseComparison")
 
 # pairwiseComparison.default <- function(aovTable, design, effect, data, respvar, pwTest = NULL, siglevel = 0.05) {
@@ -34,7 +24,7 @@ pairwiseComparison <- function(aovTable, design, effect, data, respvar, environm
 
      	if (length(strsplit(effect, split = ":")[[1]]) == 1) {
       	if (is.null(pwTest)) { if (nlevels(data[,effect]) <= 5) { pwTestChoice <- "LSD" } else { pwTestChoice <- "HSD" }}
-          	cat("Pairwise Mean Comparison of ", effect,"\n", sep = "")
+          	# cat("Pairwise Mean Comparison of ", effect,"\n", sep = "")
           	if (designChoice <= 3) { returnData <- STAR::pairwiseAmong(data, respvar, typeTest = pwTestChoice, trmt = effect, environment = environment, dfError = aovTable[[1]][nrow(aovTable[[1]]),1], MSError = aovTable[[1]][nrow(aovTable[[1]]),3], siglevel, rdata = returnData)
           	} else {
             	start <- 1
@@ -136,12 +126,12 @@ pairwiseComparison <- function(aovTable, design, effect, data, respvar, environm
                	} else { ## ELSE STMT -- if (length(strsplit()[[1]]) != 1)
              		for (k in (1:length(pwTestChoice))) {
                     		if (designChoice <= 3) {
-                    		  returnData <- STAR::pairwiseWithin(data, respvar, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,atLevel[j]]), dfError = aovTable[[1]][nrow(aovTable[[1]]),1], MSError = aovTable[[1]][nrow(aovTable[[1]]),3], f1 = tempFactor[j], f2 = atLevel[j], siglevel = siglevel)
+                    		  returnData <- STAR::pairwiseWithin(data, respvar, environment = environment, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,atLevel[j]]), dfError = aovTable[[1]][nrow(aovTable[[1]]),1], MSError = aovTable[[1]][nrow(aovTable[[1]]),3], f1 = tempFactor[j], f2 = atLevel[j], siglevel = siglevel)
                          	} else {
                          		if (length(unique(tempPos)) > 1) {
-                         		  returnData <- STAR::pairwiseWithin(data, respvar, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,atLevel[j]]), dfError = df[[j]], MSError = MSE[[j]], f1 = tempFactor[j], f2 = atLevel[j], siglevel = siglevel)
+                         		  returnData <- STAR::pairwiseWithin(data, respvar, environment = environment, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,atLevel[j]]), dfError = df[[j]], MSError = MSE[[j]], f1 = tempFactor[j], f2 = atLevel[j], siglevel = siglevel)
                               	} else {
-                              	  returnData <- STAR::pairwiseWithin(data, respvar, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,atLevel[j]]), dfError = df[[1]], MSError = MSE[[1]], f1 = tempFactor[j], f2 = atLevel[j], siglevel = siglevel)
+                              	  returnData <- STAR::pairwiseWithin(data, respvar, environment = environment, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,atLevel[j]]), dfError = df[[1]], MSError = MSE[[1]], f1 = tempFactor[j], f2 = atLevel[j], siglevel = siglevel)
                               	}
                       		}
 					cat("\n")

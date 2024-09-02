@@ -78,8 +78,8 @@
     	#cat("\nalpha:",alpha,"; Df Error:",DFerror)
     	#cat("\nCritical Value of t:", Tprob,"\n")
     
-    	if (!is.null(main)) { cat("\n", main,"\n", sep = "") }
-    	cat("\nLeast Significant Difference (LSD) Test\n\n", sep = "") # added by AAGulles
+    	# if (!is.null(main)) { cat("\n", main,"\n", sep = "") }
+    	# cat("\nLeast Significant Difference (LSD) Test\n\n", sep = "") # added by AAGulles
     	# the following was taken from the if(group)-else stmt and modified by AAGulles
     	if (length(nr) == 1) { 
 		LSD <- Tprob * sqrt(2 * MSerror/nr)
@@ -91,20 +91,20 @@
     	}
 
     	# AAGulles added the following:
-    	labelWidth <- 29
-    	if (p.adj != "none") { maxWidth <- max(nchar(p.adj), (maxWidth - 2)) + 2 }
-    	cat(formatC("Alpha", format = "s", width = labelWidth, flag = "-"), formatC(alpha, format = "f", digits = 2, width =  maxWidth, flag = "#"), "\n",sep = "")  
-    	cat(formatC("Error Degrees of Freedom", format = "s", width = labelWidth, flag = "-"), formatC(DFerror, format = "d", width =  maxWidth, flag = "#"), "\n",sep = "")  	
-    	cat(formatC("Error Mean Square", format = "s", width = labelWidth, flag = "-"), formatC(MSerror, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
-    	cat(formatC("Critical Value", format = "s", width = labelWidth, flag = "-"), formatC(Tprob, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
-    	cat(formatC("Test Statistics", format = "s", width = labelWidth, flag = "-"), formatC(LSD, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
-	if (length(nr) > 1) {
-		cat(formatC("Harmonic Mean of Cell Sizes", format = "s", width = labelWidth, flag = "-"), formatC(nr1, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
-	}
-    	if (p.adj != "none") {
-  	   	cat(formatC("P value Adjustment Method", format = "s", width = labelWidth, flag = "-"), formatC(p.adj, format = "s", width = maxWidth, flag = "#"), "\n",sep = "")  
-    	}
-    	cat("\n")
+#     	labelWidth <- 29
+#     	if (p.adj != "none") { maxWidth <- max(nchar(p.adj), (maxWidth - 2)) + 2 }
+#     	cat(formatC("Alpha", format = "s", width = labelWidth, flag = "-"), formatC(alpha, format = "f", digits = 2, width =  maxWidth, flag = "#"), "\n",sep = "")  
+#     	cat(formatC("Error Degrees of Freedom", format = "s", width = labelWidth, flag = "-"), formatC(DFerror, format = "d", width =  maxWidth, flag = "#"), "\n",sep = "")  	
+#     	cat(formatC("Error Mean Square", format = "s", width = labelWidth, flag = "-"), formatC(MSerror, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
+#     	cat(formatC("Critical Value", format = "s", width = labelWidth, flag = "-"), formatC(Tprob, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
+#     	cat(formatC("Test Statistics", format = "s", width = labelWidth, flag = "-"), formatC(LSD, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
+# 	if (length(nr) > 1) {
+# 		cat(formatC("Harmonic Mean of Cell Sizes", format = "s", width = labelWidth, flag = "-"), formatC(nr1, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
+# 	}
+#     	if (p.adj != "none") {
+#   	   	cat(formatC("P value Adjustment Method", format = "s", width = labelWidth, flag = "-"), formatC(p.adj, format = "s", width = maxWidth, flag = "#"), "\n",sep = "")  
+#     	}
+#     	cat("\n")
 	
     	if (group) {
 	  	# suppress printing by AAGulles
@@ -131,9 +131,9 @@
 			rownames(output) <- 1:nrow(output)
 			w<-order(means[,1])
         	}
-	  	cat("Summary of the Result:\n", sep = "") # added by AAGulles
-	  	STAR::printDataFrame(output[,c(1,2,3,5)])	  # added by AAGulles
-	  	cat("Means with the same letter are not significantly different.\n\n") # added by AAGulles
+	  	# cat("Summary of the Result:\n", sep = "") # added by AAGulles
+	  	# STAR::printDataFrame(output[,c(1,2,3,5)])	  # added by AAGulles
+	  	# cat("Means with the same letter are not significantly different.\n\n") # added by AAGulles
         	output <- data.frame(output,LCI=means[w,5],UCI=means[w,6])
     	}
 
@@ -192,8 +192,8 @@
 		colnames(output) <- c("MeanDiff", "Prob", "Sig")
 		if (nrow(sigResult) != 0) {
 			colnames(sigResult) <- c("Mean Diff", "Prob")
-			cat("Significant Pairwise Mean Comparison at alpha = ", alpha,"\n")
-			STAR::printDataFrame(cbind("Treatment" = rownames(sigResult),sigResult))	# change by AAGulles
+			# cat("Significant Pairwise Mean Comparison at alpha = ", alpha,"\n")
+			# STAR::printDataFrame(cbind("Treatment" = rownames(sigResult),sigResult))	# change by AAGulles
 		}
 	 
 	 	# AAGulles suppress the following:

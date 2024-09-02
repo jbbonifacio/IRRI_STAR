@@ -113,13 +113,13 @@ NormalityTest <- function(data, var, grp = NULL, method = c("swilk")){ #UseMetho
 
 	}
 
-	if (!is.null(normTable)) {
-		if (length(var) == 1) { tempVar <- c(rep(var, nrow(normTable))) }
-		options(width = 5000)
-          if (length(method) == 1) {  cat("Test for Normality","\n")
-          } else {  cat("Tests for Normality","\n") }
-		STAR::printDataFrame(normTable)
-	}
+# 	if (!is.null(normTable)) {
+# 		if (length(var) == 1) { tempVar <- c(rep(var, nrow(normTable))) }
+# 		options(width = 5000)
+#           if (length(method) == 1) {  cat("Test for Normality","\n")
+#           } else {  cat("Tests for Normality","\n") }
+# 		STAR::printDataFrame(normTable)
+# 	}
 
 	return(invisible(normTable))
 } ### end stmt -- NormalityTest

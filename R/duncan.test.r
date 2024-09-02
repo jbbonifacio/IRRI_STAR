@@ -72,20 +72,20 @@
 	# print(DUNCAN)
 
 	# AAGulles added the following:
-	if (!is.null(main)) { cat("\n", main,"\n", sep = "") }
-    	cat("\nDuncan's Multiple Range Test (DMRT)\n\n", sep = "") # added by AAGulles
-   
-    	maxWidth <- max(nchar(round(MSerror)), nchar(DFerror)) + 7
-    	labelWidth <- 29
-	cat(formatC("Alpha", format = "s", width = labelWidth, flag = "-"), formatC(alpha, format = "f", digits = 2, width =  maxWidth, flag = "#"), "\n",sep = "")  
-    	cat(formatC("Error Degrees of Freedom", format = "s", width = labelWidth, flag = "-"), formatC(DFerror, format = "d", width =  maxWidth, flag = "#"), "\n",sep = "")  	
-    	cat(formatC("Error Mean Square", format = "s", width = labelWidth, flag = "-"), formatC(MSerror, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
-	if (length(nr) > 1) {
-		cat(formatC("Harmonic Mean of Cell Sizes", format = "s", width = labelWidth, flag = "-"), formatC(nr1, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
-		#cat("\nHarmonic Mean of Cell Sizes ", nr1 ) # suppress by AAGulles
-		#cat("\n\nDifferent value for each comparison")	# suppress by AAGulles
-	}
-	cat("\n")
+# 	if (!is.null(main)) { cat("\n", main,"\n", sep = "") }
+#     	cat("\nDuncan's Multiple Range Test (DMRT)\n\n", sep = "") # added by AAGulles
+#    
+#     	maxWidth <- max(nchar(round(MSerror)), nchar(DFerror)) + 7
+#     	labelWidth <- 29
+# 	cat(formatC("Alpha", format = "s", width = labelWidth, flag = "-"), formatC(alpha, format = "f", digits = 2, width =  maxWidth, flag = "#"), "\n",sep = "")  
+#     	cat(formatC("Error Degrees of Freedom", format = "s", width = labelWidth, flag = "-"), formatC(DFerror, format = "d", width =  maxWidth, flag = "#"), "\n",sep = "")  	
+#     	cat(formatC("Error Mean Square", format = "s", width = labelWidth, flag = "-"), formatC(MSerror, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
+# 	if (length(nr) > 1) {
+# 		cat(formatC("Harmonic Mean of Cell Sizes", format = "s", width = labelWidth, flag = "-"), formatC(nr1, format = "f", digits = 4, width =  maxWidth, flag = "#"), "\n",sep = "")  
+# 		#cat("\nHarmonic Mean of Cell Sizes ", nr1 ) # suppress by AAGulles
+# 		#cat("\n\nDifferent value for each comparison")	# suppress by AAGulles
+# 	}
+# 	cat("\n")
 	# cat(formatC(colnames(DUNCAN)[1], format = "s", width = maxLabelTable, flag = "-"), formatC(colnames(DUNCAN)[2:ncol(DUNCAN)], format = "d", width = maxWidthTable, flag = "#"), "\n", sep = "")
 	# for (i in (1:2)) {
 	#	cat(formatC(as.character(DUNCAN[i, 1]), format = "s", width = maxLabelTable, flag = "-"), sep = "")
@@ -95,8 +95,8 @@
 	#	cat("\n")
 	#}
 
-	STAR::printDataFrame(DUNCAN, digits = 4)
-	cat("\n")
+	# STAR::printDataFrame(DUNCAN, digits = 4)
+	# cat("\n")
 	if (group) {
 		#cat("\nMeans with the same letter are not significantly different.")
 		#cat("\n\nGroups, Treatments and means\n")
@@ -110,9 +110,9 @@
 			output <- output[order(output[,1]),]
 			rownames(output) <- 1:nrow(output)
         	}
-		cat("Summary of the Result:\n", sep = "") # added by AAGulles
-		STAR::printDataFrame(output[,c(1,2,3,5)])	  # added by AAGulles
-	  	cat("Means with the same letter are not significantly different.\n\n") # added by AAGulles
+		# cat("Summary of the Result:\n", sep = "") # added by AAGulles
+		# STAR::printDataFrame(output[,c(1,2,3,5)])	  # added by AAGulles
+	  	# cat("Means with the same letter are not significantly different.\n\n") # added by AAGulles
 	}
 
 	if (!group) {
@@ -172,8 +172,8 @@
 		colnames(output) <- c("MeanDiff", "Prob", "Sig")
 		if (nrow(sigResult) != 0) {
 			colnames(sigResult) <- c("Mean Diff", "Prob")
-			cat("Significant Pairwise Mean Comparison at alpha = ", alpha,"\n")
-			STAR::printDataFrame(cbind("Treatment" = rownames(sigResult),sigResult))	# change by AAGulles
+			# cat("Significant Pairwise Mean Comparison at alpha = ", alpha,"\n")
+			# STAR::printDataFrame(cbind("Treatment" = rownames(sigResult),sigResult))	# change by AAGulles
 		}
 		
 		# suppress the following stmt by AAGulles
