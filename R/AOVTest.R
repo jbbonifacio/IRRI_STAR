@@ -638,22 +638,24 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
   
   aovModeling <- NULL
   for(i in 1:4){
-    if(!is.null(eval(parse(text=paste0("input$factor",i))))){
+    j <- paste0("input$factor",i)
+    if(!is.null(eval(parse(text=j)))){
       tempAovModeling <- data.frame(module="aov", analysisId=aovAnalysisId,
                                     trait = "inputObject", environment = "general",
                                     parameter = paste0("factor",i),
-                                    value = paste(capture.output(dput(eval(parse(text=paste0(input$factor,i))))), collapse = ""))
+                                    value = paste(capture.output(dput(eval(parse(text=j)))), collapse = ""))
       
       aovModeling <- rbind(aovModeling,tempAovModeling)
     }
   }
   
   for(i in 1:2){
-    if(!is.null(eval(parse(text=paste0("input$rep",i))))){
+    j <- paste0("input$rep",i)
+    if(!is.null(eval(parse(text=j)))){
       tempAovModeling <- data.frame(module="aov", analysisId=aovAnalysisId,
                                     trait = "inputObject", environment = "general",
                                     parameter = paste0("rep",i),
-                                    value = paste(capture.output(dput(eval(parse(text=paste0(input$rep,i))))), collapse = ""))
+                                    value = paste(capture.output(dput(eval(parse(text=j)))), collapse = ""))
       
       aovModeling <- rbind(aovModeling,tempAovModeling)
     }
