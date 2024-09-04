@@ -12,7 +12,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
           command <- paste("STAR::",typeTest, ".test(data['",respvar,"'], data['",trmt,"'], dfError, MSError, alpha = ", siglevel,", group = FALSE, pwOrder = 'trmt')", sep = "")
           result.pw <- eval(parse(text = command))
 
-          aovPredictions <- data.frame(module = rep("aov",nrow(result.pw$summary)), analysisId = rep(aovAnalysisId,nrow(result.pw$summary)),
+          aovPredictions <- data.frame(module = rep("aov",nrow(result.pw$summary)), analysisId = rep(analysisId,nrow(result.pw$summary)),
                                        trait = rep(respvar,nrow(result.pw$summary)), environment = rep(environment,nrow(result.pw$summary)),
                                        designation = rownames(result.pw$summary),
                                        predictedValue = result.pw$summary$MeanDiff,
@@ -21,7 +21,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
 
           returnData$predictions <- rbind(returnData$predictions, aovPredictions)
 
-          aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(aovAnalysisId,2), trait = rep(respvar,2),
+          aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(analysisId,2), trait = rep(respvar,2),
                                    environment = rep(environment,2), parameter = c("Critical Value","Test Statistics"),
                                    method = rep(result.pw$method, 2),
                                    value = c(result.pw$tabValue, result.pw$testStat),
@@ -34,7 +34,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
                command <- paste("STAR::",typeTest, ".test(data['",respvar,"'], data['",trmt,"'], dfError, MSError, alpha = ", siglevel,", group = TRUE, pwOrder = 'trmt')", sep = "")
                result.pw <- eval(parse(text = command))
 
-               aovPredictions <- data.frame(module = rep("aov",nrow(result.pw$summary)), analysisId = rep(aovAnalysisId,nrow(result.pw$summary)),
+               aovPredictions <- data.frame(module = rep("aov",nrow(result.pw$summary)), analysisId = rep(analysisId,nrow(result.pw$summary)),
                                             trait = rep(respvar,nrow(result.pw$summary)), environment = rep(environment,nrow(result.pw$summary)),
                                             designation = as.vector(result.pw$summary[[1]]),
                                             predictedValue = result.pw$summary$means,
@@ -43,7 +43,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
 
                returnData$predictions <- rbind(returnData$predictions, aovPredictions)
 
-               aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(aovAnalysisId,2), trait = rep(respvar,2),
+               aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(analysisId,2), trait = rep(respvar,2),
                                         environment = rep(environment,2), parameter = c("Critical Value","Test Statistics"),
                                         method = rep(result.pw$method, 2),
                                         value = c(result.pw$tabValue, result.pw$testStat),
@@ -61,7 +61,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
 
                          result.pw <- eval(parse(text = command))
 
-                         aovPredictions <- data.frame(module = rep("aov",nrow(result.pw$summary)), analysisId = rep(aovAnalysisId,nrow(result.pw$summary)),
+                         aovPredictions <- data.frame(module = rep("aov",nrow(result.pw$summary)), analysisId = rep(analysisId,nrow(result.pw$summary)),
                                                       trait = rep(respvar,nrow(result.pw$summary)), environment = rep(environment,nrow(result.pw$summary)),
                                                       designation = as.vector(result.pw$summary[[1]]),
                                                       predictedValue = result.pw$summary$means,
@@ -70,7 +70,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
 
                          returnData$predictions <- rbind(returnData$predictions, aovPredictions)
 
-                         aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(aovAnalysisId,2), trait = rep(respvar,2),
+                         aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(analysisId,2), trait = rep(respvar,2),
                                                   environment = rep(environment,2), parameter = c("Critical Value","Test Statistics"),
                                                   method = rep(result.pw$method, 2),
                                                   value = c(result.pw$tabValue, result.pw$testStat),
@@ -117,7 +117,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
                          command <- paste("STAR::",c("duncan", "SNK")[rangeVal[i]], ".test(data['",respvar,"'], data['",trmt,"'], dfError, MSError, alpha = ", siglevel,", group = TRUE, pwOrder = 'trmt')", sep = "")
                          result.pw <- eval(parse(text = command))
 
-                         aovPredictions <- data.frame(module = rep("aov",nrow(result.pw$summary)), analysisId = rep(aovAnalysisId,nrow(result.pw$summary)),
+                         aovPredictions <- data.frame(module = rep("aov",nrow(result.pw$summary)), analysisId = rep(analysisId,nrow(result.pw$summary)),
                                                       trait = rep(respvar,nrow(result.pw$summary)), environment = rep(environment,nrow(result.pw$summary)),
                                                       designation = as.vector(result.pw$summary[[1]]),
                                                       predictedValue = result.pw$summary$means,
@@ -127,7 +127,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
                          returnData$predictions <- rbind(returnData$predictions, aovPredictions)
 
                          for (j in 2:ncol(result.pw$testStat)){
-                           aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(aovAnalysisId,2), trait = rep(respvar,2),
+                           aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(analysisId,2), trait = rep(respvar,2),
                                                     environment = rep(environment,2), parameter = c(paste0("Critical Value_Number of Means ",colnames(result.pw$testStat)[j]),paste0("Test Statistics_Number of Means ",colnames(result.pw$testStat)[j])),
                                                     method = rep(result.pw$method, 2),
                                                     value = c(result.pw$testStat[1,j], result.pw$testStat[2,j]),

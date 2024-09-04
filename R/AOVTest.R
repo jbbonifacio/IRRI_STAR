@@ -11,7 +11,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                     factor4 = NULL, rep1 = NULL, rep2 = NULL, set = NULL,
                     descriptive = FALSE, normality = FALSE, homogeneity = FALSE,
                     pwTest = NULL, pwVar = NULL, contrastOption = NULL, sig = 0.05,
-                    outputPath = NULL) { #UseMethod("AOVTest")
+                    outputPath = NULL, version) { #UseMethod("AOVTest")
 
 # AOVTest.default <- function(data, design, respvar, factor1, factor2 = NULL,
 #                             factor3 = NULL, factor4 = NULL, rep1 = NULL, rep2 = NULL,
@@ -635,6 +635,41 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
   } ### end stmt --- for (i in (1:length(respvar)))
 
   options(show.signif.stars = prev.option)
+  
+  for(i in 1:4){
+    if(!is.null(eval(parse(text=paste0("input$factor",i))))){
+      tempAovModeling <- data.frame(module="aov", analysisId=aovAnalysisId,
+                                    trait = "inputObject", environment = "general",
+                                    parameter = paste0("factor",i),
+                                    value = paste(capture.output(dput(paste0(input$factor,i))), collapse = ""))
+      
+      aovModeling <- rbind(aovModeling,tempAovModeling)
+    }
+  }
+  
+  for(i in 1:2){
+    if(!is.null(eval(parse(text=paste0("input$rep",i))))){
+      tempAovModeling <- data.frame(module="aov", analysisId=aovAnalysisId,
+                                    trait = "inputObject", environment = "general",
+                                    parameter = paste0("rep",i),
+                                    value = paste(capture.output(dput(paste0(input$rep,i))), collapse = ""))
+      
+      aovModeling <- rbind(aovModeling,tempAovModeling)
+    }
+  }
+  
+  returnData$modeling <- data.frame(module=rep("aov",8), analysisId=rep(aovAnalysisId,8),
+                                    trait = rep("inputObject",8), environment = rep("general",8),
+                                    parameter = c("expDesign", "respvar", "set",
+                                                  "descriptive", "normality", "homogeneity",
+                                                  "sig", "analysisId"),
+                                    value = c(input$expDesign, input$trait2Aov, input$env2Aov,
+                                              as.logical(input$descStat), as.logical(input$sWilk),
+                                              as.logical(input$sWilk), as.logical(input$bart),
+                                              input$sigLevel, input$version2Aov)
+                                    )
+  
+  returnData$modeling <- rbind(returnData$modeling, aovModeling)
 
   return(returnData)
   # return(invisible(list(data = tempAllData, aovObject = aovresult, rvWithSigEffect = rvWithSigEffect, aovTable = tempAnova, pwOption = pwOption, model = modelRHS, model2 = modelRHS2, alpha = sig)))

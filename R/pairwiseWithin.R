@@ -14,7 +14,7 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 			cat("\n-----", f2, " = ", levels(data[,f2])[[j]], "-----\n")
 			result.pw <- eval(parse(text = command))
 
-			aovPredictions <- data.frame(module = rep("aov",nrow(result.pw$summary)), analysisId = rep(aovAnalysisId,nrow(result.pw$summary)),
+			aovPredictions <- data.frame(module = rep("aov",nrow(result.pw$summary)), analysisId = rep(analysisId,nrow(result.pw$summary)),
 			                             trait = rep(respvar,nrow(result.pw$summary)), environment = rep(environment,nrow(result.pw$summary)),
 			                             designation = rownames(result.pw$summary),
 			                             predictedValue = result.pw$summary$MeanDiff,
@@ -23,7 +23,7 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 
 			returnData$predictions <- rbind(returnData$predictions, aovPredictions)
 
-			aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(aovAnalysisId,2), trait = rep(respvar,2),
+			aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(analysisId,2), trait = rep(respvar,2),
 			                         environment = rep(environment,2), parameter = c("Critical Value","Test Statistics"),
 			                         method = rep(result.pw$method, 2),
 			                         value = c(result.pw$tabValue, result.pw$testStat),
@@ -62,7 +62,7 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 		  # cat(formatC("Critical Value", format = "s", width = 25, flag = "-"), formatC(result.pw$tabValue, format = "f", digits = 4, width =  maxWidthEntry, flag = "#"), "\n", sep = "")
 		  # cat(formatC("Test Statistic", format = "s", width = 25, flag = "-"), formatC(result.pw$testStat, format = "f", digits = 4, width =  maxWidthEntry, flag = "#"), "\n\n", sep = "")
 
-		  aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(aovAnalysisId,2), trait = rep(respvar,2),
+		  aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(analysisId,2), trait = rep(respvar,2),
 		                           environment = rep(environment,2), parameter = c("Critical Value","Test Statistics"),
 		                           method = rep(result.pw$method, 2),
 		                           value = c(result.pw$tabValue, result.pw$testStat),
@@ -86,7 +86,7 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 		  # STAR::printDataFrame(result.pw$testStat, digits = 4)
 			# cat("\n")
 
-			aovMetrics <- data.frame(module = rep("aov",1), analysisId = rep(aovAnalysisId,1), trait = rep(respvar,1),
+			aovMetrics <- data.frame(module = rep("aov",1), analysisId = rep(analysisId,1), trait = rep(respvar,1),
 			                         environment = rep(environment,1), parameter = c("Test Statistics"),
 			                         method = rep(result.pw$method, 1),
 			                         value = c(result.pw$testStat),
@@ -99,7 +99,7 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 		# STAR::printDataFrame(comparison, digits = 4)
 		# cat("Means with the same letter are not significantly different\n\n")
 
-		aovPredictions <- data.frame(module = rep("aov",nrow(comparison)), analysisId = rep(aovAnalysisId,nrow(comparison)),
+		aovPredictions <- data.frame(module = rep("aov",nrow(comparison)), analysisId = rep(analysisId,nrow(comparison)),
 		                             trait = rep(respvar,nrow(comparison)), environment = rep(environment,nrow(comparison)),
 		                             designation = paste0(comparison[[1]],comparison[[6]]),
 		                             predictedValue = comparison$means,
