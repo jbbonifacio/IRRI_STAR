@@ -4,7 +4,7 @@
 # Modified by: Alaine A. Gulles
 # ----------------------------------------------------------------------
 
-pairwiseComparison <- function(aovTable, design, effect, data, respvar, environment, pwTest = NULL, siglevel = 0.05, rdata){ #UseMethod("pairwiseComparison")
+pairwiseComparison <- function(aovTable, design, effect, data, respvar, environment, pwTest = NULL, siglevel = 0.05, rdata, analysisId){ #UseMethod("pairwiseComparison")
 
 # pairwiseComparison.default <- function(aovTable, design, effect, data, respvar, pwTest = NULL, siglevel = 0.05) {
   	pwTestAvailable <- c("LSD", "duncan", "HSD", "SNK", "scheffe")
@@ -25,11 +25,11 @@ pairwiseComparison <- function(aovTable, design, effect, data, respvar, environm
      	if (length(strsplit(effect, split = ":")[[1]]) == 1) {
       	if (is.null(pwTest)) { if (nlevels(data[,effect]) <= 5) { pwTestChoice <- "LSD" } else { pwTestChoice <- "HSD" }}
           	# cat("Pairwise Mean Comparison of ", effect,"\n", sep = "")
-          	if (designChoice <= 3) { returnData <- STAR::pairwiseAmong(data, respvar, typeTest = pwTestChoice, trmt = effect, environment = environment, dfError = aovTable[[1]][nrow(aovTable[[1]]),1], MSError = aovTable[[1]][nrow(aovTable[[1]]),3], siglevel, rdata = returnData)
+          	if (designChoice <= 3) { returnData <- STAR::pairwiseAmong(data, respvar, typeTest = pwTestChoice, trmt = effect, environment = environment, dfError = aovTable[[1]][nrow(aovTable[[1]]),1], MSError = aovTable[[1]][nrow(aovTable[[1]]),3], siglevel, rdata = returnData, analysisId = aovAnalysisId)
           	} else {
             	start <- 1
                	while (is.na(match(effect, trimws(rownames(aovTable[[start]][[1]])))) && start <= length(aovTable)) start <- start + 1
-               	returnData <- STAR::pairwiseAmong(data, respvar, typeTest = pwTestChoice, trmt = effect, environment = environment, dfError = aovTable[[start]][[1]][nrow(aovTable[[start]][[1]]),1], MSError = aovTable[[start]][[1]][nrow(aovTable[[start]][[1]]),3], siglevel, rdata = returnData)
+               	returnData <- STAR::pairwiseAmong(data, respvar, typeTest = pwTestChoice, trmt = effect, environment = environment, dfError = aovTable[[start]][[1]][nrow(aovTable[[start]][[1]]),1], MSError = aovTable[[start]][[1]][nrow(aovTable[[start]][[1]]),3], siglevel, rdata = returnData, analysisId = aovAnalysisId)
           	}
      	}
 
@@ -112,12 +112,12 @@ pairwiseComparison <- function(aovTable, design, effect, data, respvar, environm
                               	sub.label <- paste(" & (", paste("data[,'",temp.blevel.oth,"']", collapse = ":", sep = ""), ") == levels(", paste("data[,'",temp.blevel.oth,"']", collapse = ":", sep = ""),")[[", l, "]]", sep = "")
 						cat(sub.label1,"\n\n")
                               	if (designChoice <= 3) {
-                              	  returnData <- STAR::pairwiseWithin(data, respvar, environment = environment, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,temp.blevel.max]), dfError = aovTable[[1]][nrow(aovTable[[1]]),1], MSError = aovTable[[1]][nrow(aovTable[[1]]),3], f1 = tempFactor[j], f2 = temp.blevel.max, f3 = sub.label, siglevel = siglevel)
+                              	  returnData <- STAR::pairwiseWithin(data, respvar, environment = environment, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,temp.blevel.max]), dfError = aovTable[[1]][nrow(aovTable[[1]]),1], MSError = aovTable[[1]][nrow(aovTable[[1]]),3], f1 = tempFactor[j], f2 = temp.blevel.max, f3 = sub.label, siglevel = siglevel, rdata = returnData, analysisId = aovAnalysisId)
                               	} else {
                               		if (length(unique(tempPos)) > 1) {
-                              		  returnData <- STAR::pairwiseWithin(data, respvar, environment = environment, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,temp.blevel.max]), dfError = df[[j]], MSE[[j]], f1 = tempFactor[j], f2 = temp.blevel.max, f3 = sub.label, siglevel = siglevel)
+                              		  returnData <- STAR::pairwiseWithin(data, respvar, environment = environment, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,temp.blevel.max]), dfError = df[[j]], MSE[[j]], f1 = tempFactor[j], f2 = temp.blevel.max, f3 = sub.label, siglevel = siglevel, rdata = returnData, analysisId = aovAnalysisId)
                                    		} else {
-                                   		  returnData <- STAR::pairwiseWithin(data, respvar, environment = environment, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,temp.blevel.max]), dfError = df[[1]], MSE[[1]], f1 = tempFactor[j], f2 = temp.blevel.max, f3 = sub.label, siglevel = siglevel)
+                                   		  returnData <- STAR::pairwiseWithin(data, respvar, environment = environment, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,temp.blevel.max]), dfError = df[[1]], MSE[[1]], f1 = tempFactor[j], f2 = temp.blevel.max, f3 = sub.label, siglevel = siglevel, rdata = returnData, analysisId = aovAnalysisId)
                                   		}
                               	}
 						cat("\n")
@@ -126,12 +126,12 @@ pairwiseComparison <- function(aovTable, design, effect, data, respvar, environm
                	} else { ## ELSE STMT -- if (length(strsplit()[[1]]) != 1)
              		for (k in (1:length(pwTestChoice))) {
                     		if (designChoice <= 3) {
-                    		  returnData <- STAR::pairwiseWithin(data, respvar, environment = environment, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,atLevel[j]]), dfError = aovTable[[1]][nrow(aovTable[[1]]),1], MSError = aovTable[[1]][nrow(aovTable[[1]]),3], f1 = tempFactor[j], f2 = atLevel[j], siglevel = siglevel)
+                    		  returnData <- STAR::pairwiseWithin(data, respvar, environment = environment, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,atLevel[j]]), dfError = aovTable[[1]][nrow(aovTable[[1]]),1], MSError = aovTable[[1]][nrow(aovTable[[1]]),3], f1 = tempFactor[j], f2 = atLevel[j], siglevel = siglevel, rdata = returnData, analysisId = aovAnalysisId)
                          	} else {
                          		if (length(unique(tempPos)) > 1) {
-                         		  returnData <- STAR::pairwiseWithin(data, respvar, environment = environment, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,atLevel[j]]), dfError = df[[j]], MSError = MSE[[j]], f1 = tempFactor[j], f2 = atLevel[j], siglevel = siglevel)
+                         		  returnData <- STAR::pairwiseWithin(data, respvar, environment = environment, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,atLevel[j]]), dfError = df[[j]], MSError = MSE[[j]], f1 = tempFactor[j], f2 = atLevel[j], siglevel = siglevel, rdata = returnData, analysisId = aovAnalysisId)
                               	} else {
-                              	  returnData <- STAR::pairwiseWithin(data, respvar, environment = environment, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,atLevel[j]]), dfError = df[[1]], MSError = MSE[[1]], f1 = tempFactor[j], f2 = atLevel[j], siglevel = siglevel)
+                              	  returnData <- STAR::pairwiseWithin(data, respvar, environment = environment, typeTest = pwTestChoice[k], nobs1 = nlevels(data[,tempFactor[j]]), nobs2 = nlevels(data[,atLevel[j]]), dfError = df[[1]], MSError = MSE[[1]], f1 = tempFactor[j], f2 = atLevel[j], siglevel = siglevel, rdata = returnData, analysisId = aovAnalysisId)
                               	}
                       		}
 					cat("\n")
@@ -139,6 +139,6 @@ pairwiseComparison <- function(aovTable, design, effect, data, respvar, environm
                	} ## END IF ELSE STMT -- if (length(strsplit()[[1]]) != 1)
           	} ## END FOR STMT -- for (j in (1:length(tempFactor)))
      	} ## END IF STMT -- if (length(strsplit(effect, split = ":")[[1]]) > 1)
-     	
+
     return(returnData)
 }
