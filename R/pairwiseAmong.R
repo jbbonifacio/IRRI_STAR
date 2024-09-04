@@ -19,7 +19,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
                                        reliability = result.pw$summary$Prob,
                                        entryType = result.pw$summary$Sig)
 
-          returnData$predictions <- rbind(returnData$predictions, aovPredictions)
+          rdata$predictions <- rbind(rdata$predictions, aovPredictions)
 
           aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(analysisId,2), trait = rep(respvar,2),
                                    environment = rep(environment,2), parameter = c("Critical Value","Test Statistics"),
@@ -27,7 +27,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
                                    value = c(result.pw$tabValue, result.pw$testStat),
                                    stdError = rep(0,2))
 
-          returnData$metrics <- rbind(returnData$metrics, aovMetrics)
+          rdata$metrics <- rbind(rdata$metrics, aovMetrics)
 
      } else {
           if (length(typeTest) == 1) {
@@ -41,7 +41,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
                                             stdError = result.pw$summary$std.err,
                                             entryType = result.pw$summary$group)
 
-               returnData$predictions <- rbind(returnData$predictions, aovPredictions)
+               rdata$predictions <- rbind(rdata$predictions, aovPredictions)
 
                aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(analysisId,2), trait = rep(respvar,2),
                                         environment = rep(environment,2), parameter = c("Critical Value","Test Statistics"),
@@ -49,7 +49,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
                                         value = c(result.pw$tabValue, result.pw$testStat),
                                         stdError = rep(0,2))
 
-               returnData$metrics <- rbind(returnData$metrics, aovMetrics)
+               rdata$metrics <- rbind(rdata$metrics, aovMetrics)
 
           } else {
                singleVal <- na.omit(match(typeTest, c("LSD", "HSD", "scheffe")))
@@ -68,7 +68,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
                                                       stdError = result.pw$summary$std.err,
                                                       entryType = result.pw$summary$group)
 
-                         returnData$predictions <- rbind(returnData$predictions, aovPredictions)
+                         rdata$predictions <- rbind(rdata$predictions, aovPredictions)
 
                          aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(analysisId,2), trait = rep(respvar,2),
                                                   environment = rep(environment,2), parameter = c("Critical Value","Test Statistics"),
@@ -76,7 +76,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
                                                   value = c(result.pw$tabValue, result.pw$testStat),
                                                   stdError = rep(0,2))
 
-                         returnData$metrics <- rbind(returnData$metrics, aovMetrics)
+                         rdata$metrics <- rbind(rdata$metrics, aovMetrics)
 
                     }
 
@@ -124,7 +124,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
                                                       stdError = result.pw$summary$std.err,
                                                       entryType = result.pw$summary$group)
 
-                         returnData$predictions <- rbind(returnData$predictions, aovPredictions)
+                         rdata$predictions <- rbind(rdata$predictions, aovPredictions)
 
                          for (j in 2:ncol(result.pw$testStat)){
                            aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(analysisId,2), trait = rep(respvar,2),
@@ -133,7 +133,7 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
                                                     value = c(result.pw$testStat[1,j], result.pw$testStat[2,j]),
                                                     stdError = rep(0,2))
 
-                           returnData$metrics <- rbind(returnData$metrics, aovMetrics)
+                           rdata$metrics <- rbind(rdata$metrics, aovMetrics)
 
                          }
                     }
@@ -141,6 +141,6 @@ pairwiseAmong <- function(data, respvar, typeTest, trmt, environment, dfError, M
           }
      }
 
-  return(returnData)
+  return(rdata)
 
 } ## END FUNCTION

@@ -21,7 +21,7 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 			                             reliability = result.pw$summary$Prob,
 			                             entryType = result.pw$summary$Sig)
 
-			returnData$predictions <- rbind(returnData$predictions, aovPredictions)
+			analysisIrdatad$predictions <- rbind(rdata$predictions, aovPredictions)
 
 			aovMetrics <- data.frame(module = rep("aov",2), analysisId = rep(analysisId,2), trait = rep(respvar,2),
 			                         environment = rep(environment,2), parameter = c("Critical Value","Test Statistics"),
@@ -29,7 +29,7 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 			                         value = c(result.pw$tabValue, result.pw$testStat),
 			                         stdError = rep(0,2))
 
-			returnData$metrics <- rbind(returnData$metrics, aovMetrics)
+			rdata$metrics <- rbind(rdata$metrics, aovMetrics)
 
 
 		}
@@ -68,7 +68,7 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 		                           value = c(result.pw$tabValue, result.pw$testStat),
 		                           stdError = rep(0,2))
 
-		  returnData$metrics <- rbind(returnData$metrics, aovMetrics)
+		  rdata$metrics <- rbind(rdata$metrics, aovMetrics)
 
 		} else {
 			# cat("\n")
@@ -92,7 +92,7 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 			                         value = c(result.pw$testStat),
 			                         stdError = rep(0,1))
 
-			returnData$metrics <- rbind(returnData$metrics, aovMetrics)
+			rdata$metrics <- rbind(rdata$metrics, aovMetrics)
 		}
 		colnames(result.pw$summary)[1] <- f1
 		# cat("Summary:", "\n")
@@ -106,10 +106,10 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 		                             stdError = comparison$std.err,
 		                             entryType = comparison$group)
 
-		returnData$predictions <- rbind(returnData$predictions, aovPredictions)
+		rdata$predictions <- rbind(rdata$predictions, aovPredictions)
 
 	}
 
-  return(returnData)
+  return(rdata)
 
 } ## END FUNCTION
