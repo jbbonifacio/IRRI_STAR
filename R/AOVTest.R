@@ -441,7 +441,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
         # STAR::printAOVTable(tempAOVTable)
         # if (estimateData) { cat("REMARK: Raw data and estimates of the missing values are used.\n") }
         # cat("\n")
-        tempAovMetrics <- NULL
+        aovMetrics <- NULL
         for(iRow in 1:nrow(tempAOVTable)){
           tempAovMetrics <- data.frame(module = rep("aov",ncol(tempAOVTable)), analysisId = rep(aovAnalysisId,ncol(tempAOVTable)), trait = rep(respvar[i],ncol(tempAOVTable)),
                                        environment = rep(setLabel[z],ncol(tempAOVTable)), parameter = c("df", "Sum of Square", "Mean Square","F Value", "Pr(>F)"),
