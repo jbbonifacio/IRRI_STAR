@@ -665,8 +665,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                                                   "descriptive", "normality", "homogeneity",
                                                   "sig", "analysisId"),
                                     value = c(input$expDesign, input$trait2Aov, input$env2Aov,
-                                              as.logical(input$descStat), as.logical(input$sWilk),
-                                              as.logical(input$sWilk), as.logical(input$bart),
+                                              as.logical(input$descStat), as.logical(input$sWilk), as.logical(input$bart),
                                               input$sigLevel, input$version2Aov)
                                     )
   
