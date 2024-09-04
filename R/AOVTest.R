@@ -114,7 +114,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
   if(is.null(returnData$status)){
     provMet <- as.data.frame(matrix(nrow=0, ncol=2))
     colnames(provMet) <- c("module", "analysisId")
-    returnData$status <- data.frame(module="aov", analysisId=aovAnalysisId)
+    returnData$status <- provMet
   }
 
   allFactor <- c(factor1, factor2, factor3, factor4)
@@ -642,7 +642,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
       tempAovModeling <- data.frame(module="aov", analysisId=aovAnalysisId,
                                     trait = "inputObject", environment = "general",
                                     parameter = paste0("factor",i),
-                                    value = paste(capture.output(dput(paste0(input$factor,i))), collapse = ""))
+                                    value = paste(capture.output(dput(eval(parse(text=paste0(input$factor,i))))), collapse = ""))
       
       aovModeling <- rbind(aovModeling,tempAovModeling)
     }
@@ -653,7 +653,7 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
       tempAovModeling <- data.frame(module="aov", analysisId=aovAnalysisId,
                                     trait = "inputObject", environment = "general",
                                     parameter = paste0("rep",i),
-                                    value = paste(capture.output(dput(paste0(input$rep,i))), collapse = ""))
+                                    value = paste(capture.output(dput(eval(parse(text=paste0(input$rep,i))))), collapse = ""))
       
       aovModeling <- rbind(aovModeling,tempAovModeling)
     }
@@ -670,6 +670,9 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
                                     )
   
   returnData$modeling <- rbind(returnData$modeling, aovModeling)
+  
+  aovStatus <- data.frame(module="aov", analysisId=aovAnalysisId)
+  returnData$status <- rbind(returnData$status,aovStatus)
 
   return(returnData)
   # return(invisible(list(data = tempAllData, aovObject = aovresult, rvWithSigEffect = rvWithSigEffect, aovTable = tempAnova, pwOption = pwOption, model = modelRHS, model2 = modelRHS2, alpha = sig)))
