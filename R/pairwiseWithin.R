@@ -101,7 +101,7 @@ pairwiseWithin <- function(data, respvar, environment, typeTest, nobs1, nobs2, d
 
 		aovPredictions <- data.frame(module = rep("aov",nrow(comparison)), analysisId = rep(analysisId,nrow(comparison)),
 		                             trait = rep(respvar,nrow(comparison)), environment = rep(environment,nrow(comparison)),
-		                             designation = paste0(comparison[[1]],comparison[[6]]),
+		                             designation = paste0(comparison[[1]],"|",comparison[[6]]),
 		                             predictedValue = comparison$means,
 		                             stdError = comparison$std.err,
 		                             entryType = comparison$group)

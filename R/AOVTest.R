@@ -661,12 +661,12 @@ AOVTest <- function(data, design, respvar, factor1, factor2 = NULL, factor3 = NU
     }
   }
   
-  returnData$modeling <- data.frame(module=rep("aov",8), analysisId=rep(aovAnalysisId,8),
-                                    trait = rep("inputObject",8), environment = rep("general",8),
-                                    parameter = c("expDesign", "respvar", "set",
+  returnData$modeling <- data.frame(module=rep("aov",9), analysisId=rep(aovAnalysisId,9),
+                                    trait = rep("inputObject",9), environment = rep("general",9),
+                                    parameter = c("formula", "expDesign", "respvar", "set",
                                                   "descriptive", "normality", "homogeneity",
                                                   "sig", "analysisId"),
-                                    value = c(input$expDesign, input$trait2Aov, input$env2Aov,
+                                    value = c(modelRHS, input$expDesign, input$trait2Aov, input$env2Aov,
                                               as.logical(input$descStat), as.logical(input$sWilk), as.logical(input$bart),
                                               input$sigLevel, input$version2Aov)
                                     )
