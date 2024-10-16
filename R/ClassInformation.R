@@ -45,6 +45,6 @@ ClassInformation <- function(data, respvar = NULL){ #UseMethod("ClassInformation
 		}
 	}
 
-	return(list("result" = result, "read" = read, "used" =used))
+	return(list("result" = result, "read" = read, "used" = used))
 }
 

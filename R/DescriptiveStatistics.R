@@ -235,8 +235,8 @@ DescriptiveStatistics <- function(data, var, grp = NULL, statistics = c("nnmiss"
 	}
 	colnames(summaryTable)[1] <- "Variable"
 
-	options(width = 5000)
-	cat("Descriptive Statistics\n")
-	printDataFrame(summaryTable)
+	# options(width = 5000)
+	# cat("Descriptive Statistics\n")
+	# printDataFrame(summaryTable)
 	return(invisible(summaryTable))
 }
